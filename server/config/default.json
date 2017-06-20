@@ -1,0 +1,17 @@
+{
+  "server" : {
+    "port" : 3000,
+    "logger" : {
+      "transports" : [
+        "console"
+      ]
+    }
+  },
+  "database" : {
+    "uri" : "",
+    "options" : {
+      "user" : "",
+      "pass" : ""
+    }
+  }
+}
