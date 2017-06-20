@@ -13,9 +13,10 @@ class BaseSchema {
     };
   }
 
-  objectRef(fieldDescription,ref) {
-    return Object.assign({}, fieldDescription, {
-      ref
+  objectRef(ref) {
+    return Object.assign({}, {
+      ref,
+      type: this.Schema.ObjectId
     });
   }
 

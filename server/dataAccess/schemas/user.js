@@ -2,13 +2,15 @@
 
 const BaseSchema = require('./base');
 
-class QuestionSchema extends BaseSchema {
+class UserSchema extends BaseSchema {
   get() {
-    const {Schema, ofType, required} = this;
+    const { Schema, ofType, required } = this;
 
     return new Schema({
-      email : required(ofType(String)),
-      pass : required(ofType(String))
+      email: required(ofType(String)),
+      pass: required(ofType(String))
     });
   }
 }
+
+module.exports = UserSchema;

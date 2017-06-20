@@ -3,7 +3,9 @@
 const BaseRepository = require('./base');
 
 class QuestionRepository extends BaseRepository {
-  constructor({dbContext}) {
+  constructor({ dbContext }) {
     super(dbContext, 'Question');
   }
 }
+
+module.exports = QuestionRepository;

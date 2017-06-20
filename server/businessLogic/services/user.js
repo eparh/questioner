@@ -2,6 +2,8 @@
 
 class UserService {
   constructor() {
-
+    this.name = 'test';
   }
 }
+
+module.exports = UserService;
