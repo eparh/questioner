@@ -1,6 +1,6 @@
 'use strict';
 
-const AnswerDTO = require('../../models/conference/answerDTO');
+const AnswerDTO = require('../../models/general/answerDTO');
 
 module.exports = (mapper) => {
   mapper.register(mapper.SNAKE_CASE_CONVENTION, 'questionDTOToDAL', AnswerDTO, Object, (mapping) => {

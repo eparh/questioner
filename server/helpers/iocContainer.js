@@ -86,11 +86,11 @@ class IoCContainer {
 
   _registerServices() {
     const servicesDirectory = path.resolve(__dirname, '..', 'businessLogic', 'services');
-    const externalServicesDirectory = path.resolve(__dirname, '..', 'businessLogic', 'externalServices');
+    // const externalServicesDirectory = path.resolve(__dirname, '..', 'businessLogic', 'externalServices');
     const excludes = ['.DS_Store'];
 
     this._registerFolder(servicesDirectory, excludes);
-    this._registerFolder(externalServicesDirectory, excludes);
+    // this._registerFolder(externalServicesDirectory, excludes);
   }
 
   _registerControllers() {

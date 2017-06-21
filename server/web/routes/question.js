@@ -1,7 +1,8 @@
 'use strict';
 
 const BaseRoute = require('./base');
-const auth = require('../../middlewares/security/auth');
+// const auth = require('../../middlewares/security/auth');
+const auth = {};
 
 class QuestionRoute extends BaseRoute {
   constructor({ questionController }) {

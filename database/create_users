@@ -1,0 +1,7 @@
+use base
+db.createUser({user: "baseUser", pwd: "base17!", roles:[{role: "readWrite", db: "base"}]})
+db.createUser({user: "baseAdmin", pwd: "baseAdmin17!", roles:[{role: "dbAdmin", db: "base"}]})
+
+use base_test
+db.createUser({user: "baseUser", pwd: "base17!", roles:[{role: "dbAdmin", db: "base_test"}]})
+db.createUser({user: "baseAdmin", pwd: "base17!", roles:[{role: "dbAdmin", db: "base_test"}]})

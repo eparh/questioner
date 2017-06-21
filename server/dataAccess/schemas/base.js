@@ -14,9 +14,10 @@ class BaseSchema {
   }
 
   objectRef(ref) {
+
     return Object.assign({}, {
       ref,
-      type: this.Schema.ObjectId
+      type: mongoose.Schema.ObjectId
     });
   }
 
