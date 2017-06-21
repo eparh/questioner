@@ -8,7 +8,9 @@ class UserSchema extends BaseSchema {
 
     return new Schema({
       email: required(ofType(String)),
-      pass: required(ofType(String))
+      login: required(ofType(String)),
+      pass: required(ofType(String)),
+      role: required(ofType(String))
     });
   }
 }
