@@ -64,7 +64,7 @@ class QuestionRepository extends BaseRepository {
     });
   }
 
-  VoteUpQuestion(questionId) {
+  voteUpQuestion(questionId) {
     return this.Model.update({
       _id: questionId
     },
@@ -75,18 +75,18 @@ class QuestionRepository extends BaseRepository {
     });
   }
 
-  VoteDownQuestion(questionId) {
+  voteDownQuestion(questionId) {
     return this.Model.update({
       _id: questionId
     },
     {
-      $dec: {
-        rating: 1
+      $inc: {
+        rating: -1
       }
     });
   }
 
-  VoteUpAnswer(questionId, answerId) {
+  voteUpAnswer(questionId, answerId) {
     return this.Model.update({
       _id: questionId,
       'answers._id': answerId
@@ -98,14 +98,14 @@ class QuestionRepository extends BaseRepository {
     });
   }
 
-  VoteDownAnswer(questionId, answerId) {
+  voteDownAnswer(questionId, answerId) {
     return this.Model.update({
       _id: questionId,
       'answers._id': answerId
     },
     {
       $inc: {
-        'answers.$.rating': 1
+        'answers.$.rating': -1
       }
     });
   }

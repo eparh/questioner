@@ -8,14 +8,14 @@ const { clearCollections } = require('../../helpers/database');
 
 const { questionRepository } = require('../../../helpers/iocContainer').getAllDependencies();
 
-const { questionsToCreate, questionToCreate, questionToUpdate, answer, expectedAnswerText } = require('./data/question');
+const { questionsToCreate, questionToCreate, questionToUpdate, answer } = require('./data/question');
 
 /* eslint-disable no-empty-function */
+/* eslint-disable no-magic-numbers */
 
 function cleanup() {
   return clearCollections([questionRepository.Model.modelName]);
 }
-
 
 describe('Question Repository', () => {
   const testOpts = {
@@ -32,11 +32,10 @@ describe('Question Repository', () => {
   generateTestsForBaseRepository(testOpts);
 
   describe('#getAll', () => {
-
     before(async () => {
       const promises = questionsToCreate.map(question => questionRepository.create(question));
 
-      Promise.all(promises);
+      await Promise.all(promises);
     });
 
     it('should get all questions', async () => {
@@ -45,13 +44,10 @@ describe('Question Repository', () => {
 
       expect(results).to.have.length(expectedLength);
     });
-
-    after(cleanup);
   });
 
   describe('#getByTags', () => {
 
-    after(cleanup);
   });
 
   describe('#getWithAnswers', () => {
@@ -67,76 +63,98 @@ describe('Question Repository', () => {
 
       expect(results).to.have.length(expectedLength);
     });
-
-    after(cleanup);
   });
 
   describe('=Answers=', () => {
+    let newQuestionId;
+    let relatedAnswerId;
+
+    beforeEach(async () => {
+      const newQuestion = await questionRepository.create(questionToCreate);
+
+      newQuestionId = newQuestion._id;
+      relatedAnswerId = newQuestion.answers[0]._id;
+    });
+
     describe('#addAnswer', () => {
-      let newQustionId;
-
-      before(async () => {
-        const newQuestion = await questionRepository.create(questionToCreate);
-
-        newQustionId = newQuestion._id;
-      });
-
       it('should add answer', async () => {
-        await questionRepository.addAnswer(newQustionId, answer);
-        const updatedQuestion = await questionRepository.findById(newQustionId);
+        await questionRepository.addAnswer(newQuestionId, answer);
+        const updatedQuestion = await questionRepository.findById(newQuestionId);
 
         expect(updatedQuestion).to.have.property('answers').with.length(2);
         expect(updatedQuestion.answers[1]).to.deep.include(answer);
       });
-
-      after(cleanup);
     });
 
     describe('#updateAnswer', () => {
-      let newQustionId;
-      let relatedAnswerId;
-
-      before(async () => {
-        const newQuestion = await questionRepository.create(questionToCreate);
-
-        newQustionId = newQuestion._id;
-        relatedAnswerId = newQuestion.answers[0]._id;
-      });
-
       it('should update answer', async () => {
         answer._id = relatedAnswerId;
-        await questionRepository.updateAnswer(newQustionId, answer);
-        const updatedQuestion = await questionRepository.findById(newQustionId);
+        await questionRepository.updateAnswer(newQuestionId, answer);
+        const updatedQuestion = await questionRepository.findById(newQuestionId);
 
         expect(updatedQuestion).to.have.property('answers').with.length(1);
         expect(updatedQuestion.answers[0]).to.deep.equal(answer);
       });
-
-      after(cleanup);
     });
 
     describe('#removeAnswer', () => {
-      let newQustionId;
-      let relatedAnswerId;
-
-      before(async () => {
-        const newQuestion = await questionRepository.create(questionToCreate);
-
-        newQustionId = newQuestion._id;
-        relatedAnswerId = newQuestion.answers[0]._id;
-      });
-
       it('should delete answer', async () => {
-        await questionRepository.removeAnswer(newQustionId, relatedAnswerId);
-        const updatedQuestion = await questionRepository.findById(newQustionId);
+        await questionRepository.removeAnswer(newQuestionId, relatedAnswerId);
+        const updatedQuestion = await questionRepository.findById(newQuestionId);
 
         expect(updatedQuestion).to.have.property('answers').with.length(0);
       });
+    });
 
-      after(cleanup);
+    describe('#voteUpQuestion', () => {
+      it('should vote up', async () => {
+        await questionRepository.voteUpQuestion(newQuestionId);
+
+        const updatedQuestion = await questionRepository.findById(newQuestionId);
+
+        expect(updatedQuestion).to.include({
+          rating: 1
+        });
+      });
+    });
+
+    describe('#voteDownQuestion', () => {
+      it('should vote down', async () => {
+        await questionRepository.voteDownQuestion(newQuestionId);
+
+        const updatedQuestion = await questionRepository.findById(newQuestionId);
+
+        expect(updatedQuestion).to.include({
+          rating: -1
+        });
+      });
+    });
+
+    describe('#voteUpAnswer', () => {
+      it('should vote down', async () => {
+        await questionRepository.voteUpAnswer(newQuestionId, relatedAnswerId);
+
+        const updatedQuestion = await questionRepository.findById(newQuestionId);
+
+        expect(updatedQuestion.answers[0]).to.include({
+          rating: 1
+        });
+      });
+    });
+
+    describe('#voteDownAnswer', () => {
+      it('should vote down', async () => {
+        await questionRepository.voteDownAnswer(newQuestionId, relatedAnswerId);
+
+        const updatedQuestion = await questionRepository.findById(newQuestionId);
+
+        expect(updatedQuestion.answers[0]).to.include({
+          rating: -1
+        });
+      });
     });
   });
 
-
+  afterEach(cleanup);
   after(hooks.after);
 });
