@@ -14,7 +14,6 @@ class BaseSchema {
   }
 
   objectRef(ref) {
-
     return Object.assign({}, {
       ref,
       type: mongoose.Schema.ObjectId
