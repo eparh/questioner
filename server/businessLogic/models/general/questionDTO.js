@@ -10,6 +10,7 @@ class QuestionDTO {
     this.dateOfCreation = undefined;
     this.dateOfUpdate = undefined;
     this.attachments = undefined;
+    this.answers = undefined;
   }
 }
 

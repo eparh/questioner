@@ -4,6 +4,8 @@ class UserDTO {
   constructor() {
     this.email = undefined;
     this.pass = undefined;
+    this.login = undefined;
+    this.role = undefined;
   }
 }
 

@@ -98,8 +98,9 @@ describe('Question Repository', () => {
       it('should add answer', async () => {
         await questionRepository.addAnswer(newQuestionId, answer);
         const updatedQuestion = await questionRepository.findById(newQuestionId);
+        const expectedLength = 2;
 
-        expect(updatedQuestion).to.have.property('answers').with.length(2);
+        expect(updatedQuestion).to.have.property('answers').with.length(expectedLength);
         expect(updatedQuestion.answers[1]).to.deep.include(answer);
       });
     });

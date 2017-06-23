@@ -15,23 +15,22 @@ class QuestionRoute extends BaseRoute {
     // const { validator } = self;
 
     router.get('/questions', auth, self.registerHandler('getQuestions'));
-    router.post('/question', auth, self.registerHandler('createQuestion'));
-    router.post('/answer', auth, self.registerHandler('createAnswer'));
-    router.put('/question', auth, self.registerHandler('createQuestion'));
-    router.put('/answer', auth, self.registerHandler('createAnswer'));
-    router.delete('/question', auth, self.registerHandler('deleteQuestion'));
-    router.delete('/answer', auth, self.registerHandler('createAnswer'));
-    router.put('/question/vote/:direction', auth, self.registerHandler('voteQuestion'));
-    router.put('/answer/vote/:direction', auth, self.registerHandler('voteAnswer'));
+    router.get('/questions/tags/:tag', auth, self.registerHandler('getQuestions'));
+    router.get('/questions-with-answers', auth, self.registerHandler('getQuestionWithAnswers'));
+    router.get('/questions/:id', auth, self.registerHandler('getQuestion'));
+    router.post('/questions/', auth, self.registerHandler('createQuestion'));
+    router.put('/questions/', auth, self.registerHandler('updateQuestion'));
+    router.put('/questions/vote/:direction', auth, self.registerHandler('voteQuestion'));
+    router.delete('/questions/:id', auth, self.registerHandler('deleteQuestion'));
+
+    router.post('/questions/:questionId/answer', auth, self.registerHandler('createAnswer'));
+    router.put('/questions/:questionId/answers/', auth, self.registerHandler('updateAnswer'));
+    router.delete('/questions/:questionId/answers/:answerId', auth, self.registerHandler('deleteAnswer'));
+    router.put('/questions/:questionId/answers/:answerId/vote/:direction', auth, self.registerHandler('voteAnswer'));
     router.post('/tag', auth, self.registerHandler('createTag'));
-    router.put('/tag', auth, self.registerHandler('updateTag'));
-    router.delete('/tag', auth, self.registerHandler('deleteTag'));
+    router.put('/tag/', auth, self.registerHandler('updateTag'));
+    router.delete('/tag/:id', auth, self.registerHandler('deleteTag'));
   }
-
-  getBaseUrl() {
-    return '/';
-  }
-
 }
 
 module.exports = QuestionRoute;
