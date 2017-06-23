@@ -10,9 +10,6 @@ const { questionRepository } = require('../../../helpers/iocContainer').getAllDe
 
 const { questionsToCreate, questionToCreate, questionToUpdate, answer } = require('./data/question');
 
-/* eslint-disable no-empty-function */
-/* eslint-disable no-magic-numbers */
-
 function cleanup() {
   return clearCollections([questionRepository.Model.modelName]);
 }
@@ -31,41 +28,62 @@ describe('Question Repository', () => {
 
   generateTestsForBaseRepository(testOpts);
 
-  describe('#getAll', () => {
-    before(async () => {
+  describe('Getting', () => {
+    beforeEach(async () => {
       const promises = questionsToCreate.map(question => questionRepository.create(question));
 
       await Promise.all(promises);
     });
 
-    it('should get all questions', async () => {
-      const results = await questionRepository.getAll();
-      const expectedLength = 3;
 
-      expect(results).to.have.length(expectedLength);
-    });
-  });
+    describe('#getAll', () => {
+      it('should get all questions', async () => {
+        const results = await questionRepository.getAll();
+        const expectedLength = 3;
 
-  describe('#getByTags', () => {
-
-  });
-
-  describe('#getWithAnswers', () => {
-    before(async () => {
-      const promises = questionsToCreate.map(question => questionRepository.create(question));
-
-      Promise.all(promises);
+        expect(results).to.have.length(expectedLength);
+      });
     });
 
-    it('should get questions with answers', async () => {
-      const results = await questionRepository.getWithAnswers();
-      const expectedLength = 1;
+    describe('#getByTags', () => {
+      let tags;
 
-      expect(results).to.have.length(expectedLength);
+      beforeEach(async () => {
+        const allDocuments = await questionRepository.getAll();
+
+        tags = allDocuments[0].tags;
+      });
+
+      it('should get by tags array', async () => {
+        const results = await questionRepository.getByTags(tags);
+
+        expect(results).to.have.length(1);
+      });
+
+      it('should get by single tag', async () => {
+        const results = await questionRepository.getByTags([tags[0]]);
+
+        expect(results).to.have.length(1);
+      });
+
+      it('should not get by empty tags array', async () => {
+        const results = await questionRepository.getByTags([]);
+
+        return expect(results).to.be.empty;
+      });
     });
+
+    describe('#getWithAnswers', () => {
+      it('should get questions with answers', async () => {
+        const results = await questionRepository.getWithAnswers();
+
+        expect(results).to.have.length(1);
+      });
+    });
+
   });
 
-  describe('=Answers=', () => {
+  describe('=Embedded=', () => {
     let newQuestionId;
     let relatedAnswerId;
 

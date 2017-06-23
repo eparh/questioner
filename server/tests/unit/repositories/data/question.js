@@ -8,7 +8,10 @@ const questionsToCreate = [
     author: new mongoose.Types.ObjectId(),
     title: 'What is love 1',
     description: 'Babe don\'t hurt me',
-    tags: ['song', 'joy'],
+    tags: [
+      new mongoose.Types.ObjectId(),
+      new mongoose.Types.ObjectId()
+    ],
     dateOfCreation: new Date(),
     dateOfUpdate: new Date(),
     attachments: [
@@ -24,7 +27,10 @@ const questionsToCreate = [
     author: new mongoose.Types.ObjectId(),
     title: 'What is love 2',
     description: 'No more',
-    tags: ['song', 'joy'],
+    tags: [
+      new mongoose.Types.ObjectId(),
+      new mongoose.Types.ObjectId()
+    ],
     dateOfCreation: new Date(),
     dateOfUpdate: new Date(),
     attachments: [
@@ -48,7 +54,10 @@ const questionsToCreate = [
     author: new mongoose.Types.ObjectId(),
     title: 'What is love 3',
     description: 'No more',
-    tags: ['song', 'joy'],
+    tags: [
+      new mongoose.Types.ObjectId(),
+      new mongoose.Types.ObjectId()
+    ],
     dateOfCreation: new Date(),
     dateOfUpdate: new Date(),
     attachments: [
@@ -64,7 +73,10 @@ const questionToCreate = {
   author: new mongoose.Types.ObjectId(),
   title: 'What is love',
   description: 'No more',
-  tags: ['song', 'joy'],
+  tags: [
+    new mongoose.Types.ObjectId(),
+    new mongoose.Types.ObjectId()
+  ],
   dateOfCreation: new Date(),
   dateOfUpdate: new Date(),
   attachments: [

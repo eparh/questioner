@@ -12,7 +12,7 @@ class QuestionSchema extends BaseSchema {
       title: required(ofType(String)),
       description: required(ofType(String)),
       tags: [
-        ofType(String)
+        objectRef('Tag')
       ],
       dateOfCreation: required(ofType(Date)),
       dateOfUpdate: required(ofType(Date)),

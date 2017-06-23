@@ -13,7 +13,11 @@ class QuestionRepository extends BaseRepository {
 
   getByTags(tags) {
     return this.find({
-      tags
+      tags: {
+        $elemMatch: {
+          $in: tags
+        }
+      }
     });
   }
 
