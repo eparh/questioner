@@ -16,13 +16,8 @@ class BaseRoute {
     const router = new Router();
 
     self.get(router);
-    self.getAdditional(router);
 
     return (new Router()).use(self.getBaseUrl(), router.routes()).routes();
-  }
-
-  getAdditional(router) {
-    return router;
   }
 
   registerHandler(methodName, isAsync = true) {

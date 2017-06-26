@@ -8,12 +8,10 @@ class QuestionController {
     this.questionService = questionService;
   }
 
+  getQuestion() {}
+
   getQuestions() {
     return this.questionService.getAl();
-  }
-
-  getQuestionsWithAnswers() {
-    return this.questionService.getQuestionsWithAnswers();
   }
 
   getQuestionsByTags(ctx) {

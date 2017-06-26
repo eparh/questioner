@@ -13,6 +13,7 @@
     "dee-mapper": "^1.1.1",
     "fs-extra": "^3.0.1",
     "koa": "^2.2.0",
+    "koa-bodyparser": "^4.2.0",
     "koa-dee-validator": "^1.1.1",
     "koa-multer": "^1.0.1",
     "koa-ratelimit": "^4.0.0",
