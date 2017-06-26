@@ -8,7 +8,11 @@ class QuestionController {
     this.questionService = questionService;
   }
 
-  getQuestion() {}
+  getQuestion(ctx) {
+    const id = ctx.params.id;
+
+    return this.questionService.getById(id);
+  }
 
   getQuestions() {
     return this.questionService.getAl();

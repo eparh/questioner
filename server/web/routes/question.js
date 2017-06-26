@@ -12,25 +12,22 @@ class QuestionRoute extends BaseRoute {
     const self = this;
 
     // const { validator } = self;
-    router.get('/questions', self.registerHandler('getQuestions'));
-    router.get('/questions/tags/:tag', self.registerHandler('getQuestions'));
-    router.get('/questions/:id', self.registerHandler('getQuestion'));
-    router.post('/questions/', self.registerHandler('createQuestion'));
-    router.put('/questions/', self.registerHandler('updateQuestion'));
-    router.put('/questions/vote/:direction', self.registerHandler('voteQuestion'));
-    router.delete('/questions/:id', self.registerHandler('deleteQuestion'));
+    router.get('/', self.registerHandler('getQuestions'));
+    router.get('/tags/:tag', self.registerHandler('getQuestions'));
+    router.get('/:id', self.registerHandler('getQuestion'));
+    router.post('/', self.registerHandler('createQuestion'));
+    router.put('/', self.registerHandler('updateQuestion'));
+    router.put('/:direction', self.registerHandler('voteQuestion'));
+    router.delete('/:id', self.registerHandler('deleteQuestion'));
 
-    router.post('/questions/:questionId/answer', self.registerHandler('createAnswer'));
-    router.put('/questions/:questionId/answers/', self.registerHandler('updateAnswer'));
-    router.delete('/questions/:questionId/answers/:answerId', self.registerHandler('deleteAnswer'));
-    router.put('/questions/:questionId/answers/:answerId/vote/:direction', self.registerHandler('voteAnswer'));
-    router.post('/tag', self.registerHandler('createTag'));
-    router.put('/tag/', self.registerHandler('updateTag'));
-    router.delete('/tag/:id', self.registerHandler('deleteTag'));
+    router.post('/:questionId/answer', self.registerHandler('createAnswer'));
+    router.put('/:questionId/answers/', self.registerHandler('updateAnswer'));
+    router.delete('/:questionId/answers/:answerId', self.registerHandler('deleteAnswer'));
+    router.put('/:questionId/answers/:answerId/vote/:direction', self.registerHandler('voteAnswer'));
   }
 
   getBaseUrl() {
-    return '/test';
+    return '/questions';
   }
 }
 

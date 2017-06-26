@@ -5,8 +5,8 @@ const BaseRoute = require('./base');
 const auth = {};
 
 class UserRoute extends BaseRoute {
-  constructor({ questionController }) {
-    super(questionController);
+  constructor({ userController }) {
+    super(userController);
   }
 
   get(router) {
@@ -19,7 +19,7 @@ class UserRoute extends BaseRoute {
   }
 
   getBaseUrl() {
-    return '/';
+    return '/users';
   }
 
 }

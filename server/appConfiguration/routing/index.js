@@ -1,7 +1,8 @@
 'use strict';
 
 const configRoutesFunctions = [
-  require('./question')
+  require('./question'),
+  require('./tag')
 ];
 const routes = require('../../helpers/iocContainer').getAllDependencies();
 
