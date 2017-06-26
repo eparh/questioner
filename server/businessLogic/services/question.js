@@ -51,21 +51,6 @@ class QuestionService {
 
     return this.questionRepository.voteAnswer(questionId, answerId, direction);
   }
-
-  createTag(tag) {
-
-    return this.tagRepository.createTag(tag);
-  }
-
-  updateTag(tag) {
-
-    return this.tagRepository.updateTag(tag);
-  }
-
-  deleteTag(id) {
-
-    return this.tagRepository.deleteTag(id);
-  }
 }
 
 module.exports = QuestionService;

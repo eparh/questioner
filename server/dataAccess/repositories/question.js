@@ -8,7 +8,11 @@ class QuestionRepository extends BaseRepository {
   }
 
   getAll() {
-    return this.find();
+    return this.find({}, '-answers');
+  }
+
+  getById(id) {
+    return this.findById(id);
   }
 
   getByTags(tags) {

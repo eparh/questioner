@@ -73,11 +73,19 @@ describe('Question Repository', () => {
       });
     });
 
-    describe('#getWithAnswers', () => {
-      it('should get questions with answers', async () => {
-        const results = await questionRepository.getWithAnswers();
+    describe('#getById', () => {
+      let newQuestionId;
 
-        expect(results).to.have.length(1);
+      before(async () => {
+        const newQuestion = await questionRepository.create(questionToCreate);
+
+        newQuestionId = newQuestion._id;
+      });
+
+      it('should get questions with answers', async () => {
+        const result = await questionRepository.getById(newQuestionId);
+
+        return expect(result).to.exist;
       });
     });
 

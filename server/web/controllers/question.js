@@ -1,8 +1,5 @@
 'use strict';
 
-/* eslint-disable no-empty-function */
-
-
 class QuestionController {
   constructor({ questionService }) {
     this.questionService = questionService;
