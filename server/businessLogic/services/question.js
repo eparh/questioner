@@ -1,9 +1,8 @@
 'use strict';
 
 class QuestionService {
-  constructor({ questionRepository, tagRepository }) {
+  constructor({ questionRepository }) {
     this.questionRepository = questionRepository;
-    this.tagRepository = tagRepository;
   }
   getAll() {
     return this.questionRepository.getAll();
@@ -14,7 +13,14 @@ class QuestionService {
   }
 
   createQuestion(question, attachments) {
-    return this.questionRepository.createQuestion(question, attachments);
+    const now = new Date();
+    const authorId = question.author;
+
+    question.attachments = attachments;
+    question.author = this.questionRepository.toObjectId(authorId);
+    question.dateOfCreation = now;
+    question.dateOfUpdate = now;
+    return this.questionRepository.create(question);
   }
 
   updateQuestion(question, attachments) {

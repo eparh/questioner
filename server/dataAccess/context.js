@@ -36,6 +36,10 @@ class DbContext {
       this.models[model.modelName] = model;
     });
   }
+
+  convertToObjectId() {
+    return mongoose.Types.ObjectId;
+  }
 }
 
 module.exports = DbContext;

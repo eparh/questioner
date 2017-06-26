@@ -12,7 +12,7 @@ class QuestionController {
   }
 
   getQuestions() {
-    return this.questionService.getAl();
+    return this.questionService.getAll();
   }
 
   getQuestionsByTags(ctx) {
@@ -22,10 +22,10 @@ class QuestionController {
   }
 
   createQuestion(ctx) {
-    const question = JSON.parse(ctx.request.body.question);
-    const attachments = ctx.req.attachments;
+    const question = ctx.request.body;
+    // const attachments = ctx.req.attachments;
 
-    return this.questionService.createQuestion(question, attachments);
+    return this.questionService.createQuestion(question, []);
   }
 
   updateQuestion(ctx) {
@@ -71,24 +71,6 @@ class QuestionController {
     const { questionId, answerId, direction } = ctx.params;
 
     return this.questionService.voteAnswer(questionId, answerId, direction);
-  }
-
-  createTag(ctx) {
-    const tag = JSON.parse(ctx.request.tag);
-
-    return this.questionService.createTag(tag);
-  }
-
-  updateTag(ctx) {
-    const tag = JSON.parse(ctx.request.tag);
-
-    return this.questionService.updateTag(tag);
-  }
-
-  deleteTag(ctx) {
-    const id = ctx.params.id;
-
-    return this.questionService.deleteTag(id);
   }
 }
 

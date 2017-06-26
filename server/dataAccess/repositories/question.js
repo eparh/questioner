@@ -46,7 +46,6 @@ class QuestionRepository extends BaseRepository {
     );
   }
 
-
   updateAnswer(questionId, answer) {
     return this.Model.update({
       _id: questionId,

@@ -15,7 +15,7 @@ class UserRoute extends BaseRoute {
 
     router.post('/register', self.registerHandler('register'));
     router.post('/login', self.registerHandler('login'));
-    router.post('/logout', auth, self.registerHandler('logout'));
+    router.post('/logout', self.registerHandler('logout'));
   }
 
   getBaseUrl() {

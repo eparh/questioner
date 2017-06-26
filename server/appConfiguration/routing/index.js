@@ -2,7 +2,8 @@
 
 const configRoutesFunctions = [
   require('./question'),
-  require('./tag')
+  require('./tag'),
+  require('./user')
 ];
 const routes = require('../../helpers/iocContainer').getAllDependencies();
 

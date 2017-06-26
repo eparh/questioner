@@ -12,13 +12,13 @@ class UserController {
   }
 
   logout(ctx) {
-    const id = JSON.parse(ctx.request.tag);
+    const id = JSON.parse(ctx.request.id);
 
     return this.userService.logout(id);
   }
 
   register(ctx) {
-    const formData = JSON.parse(ctx.request.tag);
+    const formData = ctx.request.body;
 
     return this.userService.register(formData);
   }

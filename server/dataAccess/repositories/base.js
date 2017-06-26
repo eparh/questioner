@@ -51,6 +51,12 @@ class BaseRepository {
       return null;
     }
   }
+
+  toObjectId(str) {
+    const converter = this.dbContext.convertToObjectId();
+
+    return converter(str);
+  }
 }
 
 module.exports = BaseRepository;
