@@ -1385,6 +1385,10 @@ object-assign@^4.0.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
 
+object-mapper@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/object-mapper/-/object-mapper-3.0.1.tgz#17aa5617f8152cebfe29d44d3a7db55516c424f7"
+
 on-finished@^2.1.0, on-finished@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/on-finished/-/on-finished-2.3.0.tgz#20f1336481b083cd75337992a16971aa2d906947"

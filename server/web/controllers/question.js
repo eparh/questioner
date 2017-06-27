@@ -29,10 +29,10 @@ class QuestionController {
   }
 
   updateQuestion(ctx) {
-    const question = JSON.parse(ctx.request.body.question);
-    const attachments = ctx.req.attachments;
+    const question = ctx.request.body;
+    // const attachments = ctx.req.attachments;
 
-    return this.questionService.updateQuestion(question, attachments);
+    return this.questionService.updateQuestion(question, []);
   }
 
   voteQuestion(ctx) {

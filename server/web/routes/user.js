@@ -2,7 +2,7 @@
 
 const BaseRoute = require('./base');
 // const auth = require('../../middlewares/security/auth');
-const auth = {};
+
 
 class UserRoute extends BaseRoute {
   constructor({ userController }) {

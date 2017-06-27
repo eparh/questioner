@@ -1,21 +1,45 @@
 'use strict';
 
-const QuestionDTO = require('../../models/general/questionDTO');
+const toObjectId = require('../../../helpers/objectIdConverter');
+const now = new Date();
 
-module.exports = (mapper) => {
-  mapper.register(mapper.SNAKE_CASE_CONVENTION, 'questDTOToDAL', QuestionDTO, Object, (mapping) => {
-    mapping.convert((questionInfo) => {
-      return {
-        rating: questionInfo.rating,
-        author: mapper.userDTOToDAL(questionInfo.author),
-        title: questionInfo.title,
-        description: questionInfo.description,
-        tags: questionInfo.tags,
-        dateOfCreation: questionInfo.dateOfCreation,
-        // TO-DO  attachments : questionInfo.attachments
-        dateOfUpdate: questionInfo.dateOfUpdate,
-        answer: mapper.answerDTOToDAL(questionInfo.answer)
-      };
-    });
-  });
+const mapCreateQuestion = {
+  rating: 'rating',
+  title: 'title',
+  description: 'description',
+  author: {
+    key: 'author',
+    transform: (value) => toObjectId(value)
+  },
+  dateOfCreation: {
+    key: 'dateOfCreation',
+    default: now
+  },
+  dateOfUpdate: {
+    key: 'dateOfUpdate',
+    default: now
+  }
+};
+
+const mapUpdateQuestion = {
+  _id: {
+    key: '_id',
+    transform: (value) => toObjectId(value)
+  },
+  rating: 'rating',
+  title: 'title',
+  description: 'description',
+  author: {
+    key: 'author',
+    transform: (value) => toObjectId(value)
+  },
+  dateOfUpdate: {
+    key: 'dateOfUpdate',
+    default: now
+  }
+};
+
+module.exports = {
+  mapCreateQuestion,
+  mapUpdateQuestion
 };

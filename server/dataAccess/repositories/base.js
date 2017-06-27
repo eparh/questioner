@@ -17,6 +17,14 @@ class BaseRepository {
     return this.Model.update(query, info, opts);
   }
 
+  updateById(info) {
+    return this.update({
+      _id: info._id
+    }, {
+      $set: info
+    });
+  }
+
   async find(query, attributes) {
     const self = this;
     const models = await this.Model.find(query, attributes);

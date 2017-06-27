@@ -3,12 +3,10 @@
 const Router = require('koa-router');
 
 const response = require('../../helpers/response');
-const validator = require('../../middlewares/validation/validator');
 
 class BaseRoute {
   constructor(controller) {
     this.controller = controller;
-    this.validator = validator;
   }
 
   apply() {
