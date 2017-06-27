@@ -25,14 +25,6 @@ class QuestionRepository extends BaseRepository {
     });
   }
 
-  getWithAnswers() {
-    return this.find({
-      answers: {
-        $gt: []
-      }
-    });
-  }
-
   addAnswer(questionId, answer) {
     return this.Model.update(
       {

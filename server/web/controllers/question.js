@@ -18,7 +18,7 @@ class QuestionController {
   getQuestionsByTags(ctx) {
     const tags = ctx.params.tags;
 
-    return this.questionService.getQuestionsByTags(tags);
+    return this.questionService.getByTags(tags);
   }
 
   createQuestion(ctx) {

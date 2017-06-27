@@ -17,7 +17,7 @@ class QuestionRoute extends BaseRoute {
     router.get('/:id', self.registerHandler('getQuestion'));
     router.post('/', self.registerHandler('createQuestion'));
     router.put('/', self.registerHandler('updateQuestion'));
-    router.put('/:direction', self.registerHandler('voteQuestion'));
+    router.put('/:questionId/:direction', self.registerHandler('voteQuestion'));
     router.delete('/:id', self.registerHandler('deleteQuestion'));
 
     router.post('/:questionId/answer', self.registerHandler('createAnswer'));

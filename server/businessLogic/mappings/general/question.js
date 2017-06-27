@@ -1,16 +1,12 @@
 'use strict';
 
-const toObjectId = require('../../../helpers/objectIdConverter');
 const now = new Date();
 
 const mapCreateQuestion = {
   rating: 'rating',
   title: 'title',
   description: 'description',
-  author: {
-    key: 'author',
-    transform: (value) => toObjectId(value)
-  },
+  author: 'author',
   dateOfCreation: {
     key: 'dateOfCreation',
     default: now
@@ -22,17 +18,11 @@ const mapCreateQuestion = {
 };
 
 const mapUpdateQuestion = {
-  _id: {
-    key: '_id',
-    transform: (value) => toObjectId(value)
-  },
+  _id: '_id',
   rating: 'rating',
   title: 'title',
   description: 'description',
-  author: {
-    key: 'author',
-    transform: (value) => toObjectId(value)
-  },
+  author: 'author',
   dateOfUpdate: {
     key: 'dateOfUpdate',
     default: now

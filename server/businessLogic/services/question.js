@@ -2,7 +2,6 @@
 
 const mapper = require('../../helpers/mapper');
 
-
 class QuestionService {
   constructor({ questionRepository }) {
     this.questionRepository = questionRepository;
@@ -12,8 +11,12 @@ class QuestionService {
     return this.questionRepository.getAll();
   }
 
-  getQuestionsByTags(tags) {
-    return this.questionRepository.getQuestionsByTags(tags);
+  getById(id) {
+    return this.questionRepository.getById(id);
+  }
+
+  getByTags(tags) {
+    return this.questionRepository.getByTags(tags);
   }
 
   createQuestion(question, attachments) {
@@ -29,13 +32,18 @@ class QuestionService {
   }
 
   voteQuestion(questionId, direction) {
-
-    return this.questionRepository.voteQuestion(questionId, direction);
+    switch (direction) {
+      case 'up':
+        return this.questionRepository.voteUpQuestion(questionId);
+      case 'down':
+        return this.questionRepository.voteDownQuestion(questionId);
+      default: return;
+    }
   }
 
   deleteQuestion(id) {
 
-    return this.questionRepository.deleteQuestion(id);
+    return this.questionRepository.removeById(id);
   }
 
   createAnswer(questionId, answer) {
