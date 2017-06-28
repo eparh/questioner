@@ -15,6 +15,10 @@ const mapCreateQuestion = {
   dateOfUpdate: {
     key: 'dateOfUpdate',
     default: now
+  },
+  answers: {
+    key: 'answers',
+    default: []
   }
 };
 
@@ -25,7 +29,10 @@ const mapUpdateQuestion = {
   description: 'description',
   author: 'author',
   tags: 'tags',
-  answers: 'answers',
+  answers: {
+    key: 'answers',
+    default: []
+  },
   dateOfUpdate: {
     key: 'dateOfUpdate',
     default: now

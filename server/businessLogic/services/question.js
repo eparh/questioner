@@ -54,8 +54,10 @@ class QuestionService {
   }
 
   createAnswer(questionId, answer) {
+    const { mapper, questionRepository } = this;
+    const answerModel = mapper(answer, 'mapCreateAnswer');
 
-    return this.questionRepository.createAnswer(questionId, answer);
+    return questionRepository.addAnswer(questionId, answerModel);
   }
 
   updateAnswer(questionId, answer) {
@@ -65,12 +67,17 @@ class QuestionService {
 
   deleteAnswer(questionId, answerId) {
 
-    return this.questionRepository.deleteAnswer(questionId, answerId);
+    return this.questionRepository.removeAnswer(questionId, answerId);
   }
 
   voteAnswer(questionId, answerId, direction) {
-
-    return this.questionRepository.voteAnswer(questionId, answerId, direction);
+    switch (direction) {
+      case 'up':
+        return this.questionRepository.voteUpAnswer(questionId, answerId);
+      case 'down':
+        return this.questionRepository.voteDownAnswer(questionId, answerId);
+      default: return;
+    }
   }
 }
 

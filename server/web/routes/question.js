@@ -20,8 +20,8 @@ class QuestionRoute extends BaseRoute {
     router.put('/:questionId/:direction', self.registerHandler('voteQuestion'));
     router.delete('/:id', self.registerHandler('deleteQuestion'));
 
-    router.post('/:questionId/answer', self.registerHandler('createAnswer'));
-    router.put('/:questionId/answers/', self.registerHandler('updateAnswer'));
+    router.post('/:questionId/answers', self.registerHandler('createAnswer'));
+    router.put('/:questionId/answers', self.registerHandler('updateAnswer'));
     router.delete('/:questionId/answers/:answerId', self.registerHandler('deleteAnswer'));
     router.put('/:questionId/answers/:answerId/vote/:direction', self.registerHandler('voteAnswer'));
   }

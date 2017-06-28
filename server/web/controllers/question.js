@@ -49,14 +49,14 @@ class QuestionController {
 
   createAnswer(ctx) {
     const questionId = ctx.params.questionId;
-    const answer = JSON.parse(ctx.request.answer);
+    const answer = ctx.request.body;
 
     return this.questionService.createAnswer(questionId, answer);
   }
 
   updateAnswer(ctx) {
     const questionId = ctx.params.questionId;
-    const answer = JSON.parse(ctx.request.answer);
+    const answer = ctx.request.body;
 
     return this.questionService.updateAnswer(questionId, answer);
   }
