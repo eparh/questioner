@@ -7,6 +7,7 @@ const mapCreateQuestion = {
   title: 'title',
   description: 'description',
   author: 'author',
+  tags: 'tags',
   dateOfCreation: {
     key: 'dateOfCreation',
     default: now
@@ -23,6 +24,8 @@ const mapUpdateQuestion = {
   title: 'title',
   description: 'description',
   author: 'author',
+  tags: 'tags',
+  answers: 'answers',
   dateOfUpdate: {
     key: 'dateOfUpdate',
     default: now

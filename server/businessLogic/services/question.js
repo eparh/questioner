@@ -13,7 +13,14 @@ class QuestionService {
     return this.questionRepository.getById(id);
   }
 
-  getByTags(tags) {
+  getByTags(income) {
+    let tags = income;
+
+    if (!Array.isArray(income)) {
+      tags = [];
+      tags.push(income);
+    }
+
     return this.questionRepository.getByTags(tags);
   }
 

@@ -13,7 +13,7 @@ class QuestionRoute extends BaseRoute {
 
     // const { validator } = self;
     router.get('/', self.registerHandler('getQuestions'));
-    router.get('/tags/:tag', self.registerHandler('getQuestions'));
+    router.get('/tags/', self.registerHandler('getQuestionsByTags'));
     router.get('/:id', self.registerHandler('getQuestion'));
     router.post('/', self.registerHandler('createQuestion'));
     router.put('/', self.registerHandler('updateQuestion'));
