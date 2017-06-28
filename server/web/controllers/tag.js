@@ -9,22 +9,22 @@ class TagController {
     return this.tagService.getAll();
   }
 
-  createTag(ctx) {
-    const tag = JSON.parse(ctx.request.tag);
+  create(ctx) {
+    const tag = ctx.request.body;
 
-    return this.tagService.createTag(tag);
+    return this.tagService.create(tag);
   }
 
-  updateTag(ctx) {
-    const tag = JSON.parse(ctx.request.tag);
+  update(ctx) {
+    const tag = ctx.request.body;
 
-    return this.tagService.updateTag(tag);
+    return this.tagService.update(tag);
   }
 
-  deleteTag(ctx) {
+  delete(ctx) {
     const id = ctx.params.id;
 
-    return this.tagService.deleteTag(id);
+    return this.tagService.delete(id);
   }
 }
 

@@ -12,9 +12,9 @@ class TagRoute extends BaseRoute {
     const self = this;
 
     router.get('/', self.registerHandler('getAll'));
-    router.post('/', self.registerHandler('createTag'));
-    router.put('/', self.registerHandler('updateTag'));
-    router.delete('/:id', self.registerHandler('deleteTag'));
+    router.post('/', self.registerHandler('create'));
+    router.put('/', self.registerHandler('update'));
+    router.delete('/:id', self.registerHandler('delete'));
   }
 
   getBaseUrl() {

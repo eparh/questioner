@@ -1,11 +1,9 @@
 'use strict';
 
-const mapper = require('../../helpers/mapper');
-
 class QuestionService {
-  constructor({ questionRepository }) {
+  constructor({ questionRepository, mapper }) {
     this.questionRepository = questionRepository;
-    // this.mapper = mapper;
+    this.mapper = mapper;
   }
   getAll() {
     return this.questionRepository.getAll();
@@ -20,15 +18,17 @@ class QuestionService {
   }
 
   createQuestion(question, attachments) {
+    const { mapper, questionRepository } = this;
     const questionModel = mapper(question, 'mapCreateQuestion');
 
-    return this.questionRepository.create(questionModel, attachments);
+    return questionRepository.create(questionModel, attachments);
   }
 
   updateQuestion(question, attachments) {
+    const { mapper, questionRepository } = this;
     const questionModel = mapper(question, 'mapUpdateQuestion');
 
-    return this.questionRepository.updateById(questionModel, attachments);
+    return questionRepository.updateById(questionModel, attachments);
   }
 
   voteQuestion(questionId, direction) {
