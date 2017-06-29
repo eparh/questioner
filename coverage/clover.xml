@@ -308,7 +308,7 @@
 		</package>
 		<package name="middlewares.validation" >
 			<metrics statements="11"  coveredstatements="3"  conditionals="4"  coveredconditionals="0"  methods="0"  coveredmethods="0" />
-			<file name="validator.js"  path="/Users/zhenya/WebstormProjects/questioner/server/middlewares/validation/validator.js" >
+			<file name="validateQuestionCreateInfo.js"  path="/Users/zhenya/WebstormProjects/questioner/server/middlewares/validation/validateQuestionCreateInfo.js" >
 				<metrics statements="11"  coveredstatements="3"  conditionals="4"  coveredconditionals="0"  methods="0"  coveredmethods="0" />
 				<line num="3"  count="1"  type="stmt" />
 				<line num="4"  count="1"  type="stmt" />
