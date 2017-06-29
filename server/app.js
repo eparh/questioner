@@ -7,7 +7,6 @@ module.exports = () => {
   const app = new Koa();
 
   configApp(app);
-  require('koa-validate')(app);
 
   return app;
 };
