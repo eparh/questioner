@@ -2,16 +2,15 @@
 
 const BaseRoute = require('./base');
 
-const validateQuestionCreateInfo = require('../../middlewares/validation/question/validateQuestionCreateInfo');
-const validateQuestionUpdateInfo = require('../../middlewares/validation/question/validateQuestionUpdateInfo');
-const validateIdParam = require('../../middlewares/validation/question/validateIdParam');
-const validateTags = require('../../middlewares/validation/question/validateTags');
-const validateUpdateAnswerInfo = require('../../middlewares/validation/question/validateUpdateAnswerInfo');
-const validateCreateAnswerInfo = require('../../middlewares/validation/question/validateCreateAnswerInfo');
-const validateVoteQuestionInfo = require('../../middlewares/validation/question/validateVoteQuestionInfo');
-const validateVoteAnswerInfo = require('../../middlewares/validation/question/validateVoteAnswerInfo');
-const validateDeleteAnswer = require('../../middlewares/validation/question/validateDeleteAnswer');
-
+const validateQuestionCreateInfo = require('../validators/question/validateQuestionCreateInfo');
+const validateQuestionUpdateInfo = require('../validators/question/validateQuestionUpdateInfo');
+const validateIdParam = require('../validators/question/validateIdParam');
+const validateTags = require('../validators/question/validateTags');
+const validateUpdateAnswerInfo = require('../validators/question/validateUpdateAnswerInfo');
+const validateCreateAnswerInfo = require('../validators/question/validateCreateAnswerInfo');
+const validateVoteQuestionInfo = require('../validators/question/validateVoteQuestionInfo');
+const validateVoteAnswerInfo = require('../validators/question/validateVoteAnswerInfo');
+const validateDeleteAnswer = require('../validators/question/validateDeleteAnswer');
 const passport = require('passport');
 
 
@@ -22,28 +21,39 @@ class QuestionRoute extends BaseRoute {
 
   get(router) {
     const self = this;
+    const { validator } = self;
 
     router.get('/', passport.authenticationMiddleware(), self.registerHandler('getQuestions'));
-    router.get('/tags/', passport.authenticationMiddleware(), validateTags, self.registerHandler('getQuestionsByTags'));
-    router.get('/:id', passport.authenticationMiddleware(), validateIdParam, self.registerHandler('getQuestion'));
+
+    router.get('/tags/', passport.authenticationMiddleware(),
+      validator(validateTags), self.registerHandler('getQuestionsByTags'));
+
+    router.get('/:id', passport.authenticationMiddleware(),
+      validator(validateIdParam), self.registerHandler('getQuestion'));
+
     router.post('/', passport.authenticationMiddleware(),
-      validateQuestionCreateInfo, self.registerHandler('createQuestion'));
+      validator(validateQuestionCreateInfo), self.registerHandler('createQuestion'));
+
     router.put('/', passport.authenticationMiddleware(),
-      validateQuestionUpdateInfo, self.registerHandler('updateQuestion'));
+      validator(validateQuestionUpdateInfo), self.registerHandler('updateQuestion'));
 
     router.put('/:questionId/answers', passport.authenticationMiddleware(),
-      validateUpdateAnswerInfo, self.registerHandler('updateAnswer'));
+      validator(validateUpdateAnswerInfo), self.registerHandler('updateAnswer'));
 
     router.put('/:questionId/:direction', passport.authenticationMiddleware(),
-      validateVoteQuestionInfo, self.registerHandler('voteQuestion'));
-    router.delete('/:id', passport.authenticationMiddleware(), validateIdParam, self.registerHandler('deleteQuestion'));
+      validator(validateVoteQuestionInfo), self.registerHandler('voteQuestion'));
+    router.delete('/:id', passport.authenticationMiddleware(),
+      validator(validateIdParam), self.registerHandler('deleteQuestion'));
 
-    router.post('/:questionId/answers', passport.authenticationMiddleware(), validateCreateAnswerInfo,
-      self.registerHandler('createAnswer'));
+
+    router.post('/:questionId/answers', passport.authenticationMiddleware(),
+      validator(validateCreateAnswerInfo), self.registerHandler('createAnswer'));
+
     router.delete('/:questionId/answers/:answerId', passport.authenticationMiddleware(),
-      validateDeleteAnswer, self.registerHandler('deleteAnswer'));
+      validator(validateDeleteAnswer), self.registerHandler('deleteAnswer'));
+
     router.put('/:questionId/answers/:answerId/vote/:direction', passport.authenticationMiddleware(),
-      validateVoteAnswerInfo, self.registerHandler('voteAnswer'));
+      validator(validateVoteAnswerInfo), self.registerHandler('voteAnswer'));
   }
 
   getBaseUrl() {
