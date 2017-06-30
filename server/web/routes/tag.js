@@ -1,7 +1,7 @@
 'use strict';
 
 const BaseRoute = require('./base');
-// const auth = require('../../middlewares/security/auth');
+const isAdmin = require('../../middlewares/security/isAdmin');
 
 class TagRoute extends BaseRoute {
   constructor({ tagController }) {
@@ -11,10 +11,10 @@ class TagRoute extends BaseRoute {
   get(router) {
     const self = this;
 
-    router.get('/', self.registerHandler('getAll'));
-    router.post('/', self.registerHandler('create'));
-    router.put('/', self.registerHandler('update'));
-    router.delete('/:id', self.registerHandler('delete'));
+    router.get('/', isAdmin(), self.registerHandler('getAll'));
+    router.post('/', isAdmin(), self.registerHandler('create'));
+    router.put('/', isAdmin(), self.registerHandler('update'));
+    router.delete('/:id', isAdmin(), self.registerHandler('delete'));
   }
 
   getBaseUrl() {
