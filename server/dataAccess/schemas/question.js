@@ -14,8 +14,6 @@ class QuestionSchema extends BaseSchema {
       tags: [
         objectRef('Tag')
       ],
-      dateOfCreation: required(ofType(Date)),
-      dateOfUpdate: required(ofType(Date)),
       attachments: [
         {
           path: required(ofType(String)),

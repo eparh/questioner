@@ -1,21 +1,11 @@
 'use strict';
 
-const now = new Date();
-
 const mapCreateQuestion = {
   rating: 'rating',
   title: 'title',
   description: 'description',
   author: 'author',
   tags: 'tags',
-  dateOfCreation: {
-    key: 'dateOfCreation',
-    default: now
-  },
-  dateOfUpdate: {
-    key: 'dateOfUpdate',
-    default: now
-  },
   answers: {
     key: 'answers',
     default: []
@@ -32,10 +22,6 @@ const mapUpdateQuestion = {
   answers: {
     key: 'answers',
     default: []
-  },
-  dateOfUpdate: {
-    key: 'dateOfUpdate',
-    default: now
   }
 };
 
