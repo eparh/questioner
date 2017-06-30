@@ -5,16 +5,9 @@ class UserController {
     this.userService = userService;
   }
 
-  login(ctx) {
-    const credentials = JSON.parse(ctx.request.credentials);
-
-    return this.userService.login(credentials);
-  }
-
   logout(ctx) {
-    const id = JSON.parse(ctx.request.id);
-
-    return this.userService.logout(id);
+    ctx.logout();
+    ctx.redirect('/');
   }
 
   register(ctx) {

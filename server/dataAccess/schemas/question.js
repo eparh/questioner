@@ -31,6 +31,9 @@ class QuestionSchema extends BaseSchema {
           dateOfUpdate: required(ofType(Date))
         }
       ]
+    },
+    {
+      timestamps: true
     });
   }
 }

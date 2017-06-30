@@ -20,9 +20,33 @@ class BaseSchema {
     });
   }
 
+  unique(fieldDescription) {
+    return Object.assign({}, fieldDescription, {
+      unique: true
+    });
+  }
+
+  lowercase(fieldDescription) {
+    return Object.assign({}, fieldDescription, {
+      lower: true
+    });
+  }
+
+  trim(fieldDescription) {
+    return Object.assign({}, fieldDescription, {
+      trim: true
+    });
+  }
+
   withDefault(fieldDescription, value) {
     return Object.assign({}, fieldDescription, {
       default: value
+    });
+  }
+
+  toEnum(fieldDescription, value) {
+    return Object.assign({}, fieldDescription, {
+      enum: value
     });
   }
 

@@ -1,8 +1,7 @@
 'use strict';
 
 const BaseRoute = require('./base');
-// const auth = require('../../middlewares/security/auth');
-
+const passport = require('passport');
 
 class UserRoute extends BaseRoute {
   constructor({ userController }) {
@@ -11,10 +10,12 @@ class UserRoute extends BaseRoute {
 
   get(router) {
     const self = this;
-    // const { validator } = self;
 
     router.post('/register', self.registerHandler('register'));
-    router.post('/login', self.registerHandler('login'));
+    router.post('/login', passport.authenticate('local', {
+      failureRedirect: '/login',
+      successRedirect: '/questions'
+    }));
     router.post('/logout', self.registerHandler('logout'));
   }
 

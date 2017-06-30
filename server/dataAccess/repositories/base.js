@@ -32,6 +32,13 @@ class BaseRepository {
     return self.toJSON(models);
   }
 
+  async findOne(query, attributes) {
+    const self = this;
+    const models = await this.Model.findOne(query, attributes);
+
+    return self.toJSON(models);
+  }
+
   async findById(id) {
     const self = this;
     const model = await this.Model.findById(id);

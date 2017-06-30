@@ -102,7 +102,7 @@ describe('Question Repository', () => {
       relatedAnswerId = newQuestion.answers[0]._id;
     });
 
-    describe.only('#addAnswer', () => {
+    describe('#addAnswer', () => {
       it('should add answer', async () => {
         await questionRepository.addAnswer(newQuestionId, answer);
         const updatedQuestion = await questionRepository.findById(newQuestionId);

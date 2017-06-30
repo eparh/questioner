@@ -12,6 +12,8 @@ const validateVoteQuestionInfo = require('../../middlewares/validation/question/
 const validateVoteAnswerInfo = require('../../middlewares/validation/question/validateVoteAnswerInfo');
 const validateDeleteAnswer = require('../../middlewares/validation/question/validateDeleteAnswer');
 
+const passport = require('passport');
+
 
 class QuestionRoute extends BaseRoute {
   constructor({ questionController }) {
@@ -21,7 +23,7 @@ class QuestionRoute extends BaseRoute {
   get(router) {
     const self = this;
 
-    router.get('/', self.registerHandler('getQuestions'));
+    router.get('/', passport.authenticationMiddleware(), self.registerHandler('getQuestions'));
     router.get('/tags/', validateTags, self.registerHandler('getQuestionsByTags'));
     router.get('/:id', validateIdParam, self.registerHandler('getQuestion'));
     router.post('/', validateQuestionCreateInfo, self.registerHandler('createQuestion'));
