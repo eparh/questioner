@@ -2,6 +2,8 @@
 
 const BaseRoute = require('./base');
 const passport = require('passport');
+const validateLoginInfo = require('../validators/user/validateLoginInfo');
+const validateRegisterInfo = require('../validators/user/validateRegisterInfo');
 
 class UserRoute extends BaseRoute {
   constructor({ userController }) {
@@ -10,9 +12,10 @@ class UserRoute extends BaseRoute {
 
   get(router) {
     const self = this;
+    const { validator } = self;
 
-    router.post('/register', self.registerHandler('register'));
-    router.post('/login', passport.authenticate('local', {
+    router.post('/register', validator(validateRegisterInfo), self.registerHandler('register'));
+    router.post('/login', validator(validateLoginInfo), passport.authenticate('local', {
       failureRedirect: '/login',
       successRedirect: '/questions'
     }));
