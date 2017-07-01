@@ -15,10 +15,12 @@ class TagRoute extends BaseRoute {
     const self = this;
     const { validator } = self;
 
-    router.get('/', isAdmin(), self.registerHandler('getAll'));
-    router.post('/', validator(validateCreateTagInfo), isAdmin(), self.registerHandler('create'));
-    router.put('/', validator(validateUpdateTagInfo), isAdmin(), self.registerHandler('update'));
-    router.delete('/:id', validator(validateDeleteTagInfo), isAdmin(), self.registerHandler('delete'));
+    router.use(isAdmin());
+
+    router.get('/', self.registerHandler('getAll'));
+    router.post('/', validator(validateCreateTagInfo), self.registerHandler('create'));
+    router.put('/', validator(validateUpdateTagInfo), self.registerHandler('update'));
+    router.delete('/:id', validator(validateDeleteTagInfo), self.registerHandler('delete'));
   }
 
   getBaseUrl() {

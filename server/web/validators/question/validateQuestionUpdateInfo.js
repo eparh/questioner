@@ -3,6 +3,7 @@
 const idLength = 24;
 
 module.exports = (ctx) => {
+  ctx.request.body = ctx.req.body;
   ctx.checkBody('_id').notEmpty().len(idLength, idLength, 'id\'s length should be 24');
   ctx.checkBody('title').notEmpty();
   ctx.checkBody('description').notEmpty();

@@ -23,16 +23,16 @@ class QuestionController {
 
   createQuestion(ctx) {
     const question = ctx.request.body;
-    // const attachments = ctx.req.attachments;
+    const files = ctx.req.files;
 
-    return this.questionService.createQuestion(question, []);
+    return this.questionService.createQuestion(question, files);
   }
 
   updateQuestion(ctx) {
     const question = ctx.request.body;
-    // const attachments = ctx.req.attachments;
+    const files = ctx.req.files;
 
-    return this.questionService.updateQuestion(question, []);
+    return this.questionService.updateQuestion(question, files);
   }
 
   voteQuestion(ctx) {

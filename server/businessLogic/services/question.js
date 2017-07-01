@@ -26,16 +26,25 @@ class QuestionService {
 
   createQuestion(question, attachments) {
     const { mapper, questionRepository } = this;
+    const filePaths = attachments.map(file => file.path);
     const questionModel = mapper(question, 'mapCreateQuestion');
 
-    return questionRepository.create(questionModel, attachments);
+    questionModel.attachments = filePaths || [];
+
+    return questionRepository.create(questionModel);
   }
 
   updateQuestion(question, attachments) {
     const { mapper, questionRepository } = this;
     const questionModel = mapper(question, 'mapUpdateQuestion');
 
-    return questionRepository.updateById(questionModel, attachments);
+    if (attachments) {
+      const filePaths = attachments.map(file => file.path);
+
+      questionModel.attachments = filePaths;
+    }
+
+    return questionRepository.updateById(questionModel);
   }
 
   voteQuestion(questionId, direction) {

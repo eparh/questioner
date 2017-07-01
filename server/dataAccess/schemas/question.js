@@ -15,10 +15,7 @@ class QuestionSchema extends BaseSchema {
         objectRef('Tag')
       ],
       attachments: [
-        {
-          path: required(ofType(String)),
-          originalName: required(ofType(String))
-        }
+        ofType(String)
       ],
       answers: [
         {

@@ -12,7 +12,7 @@ const validateVoteQuestionInfo = require('../validators/question/validateVoteQue
 const validateVoteAnswerInfo = require('../validators/question/validateVoteAnswerInfo');
 const validateDeleteAnswer = require('../validators/question/validateDeleteAnswer');
 const passport = require('passport');
-
+const multer = require('../../middlewares/fileUploading/multer')();
 
 class QuestionRoute extends BaseRoute {
   constructor({ questionController }) {
@@ -23,36 +23,30 @@ class QuestionRoute extends BaseRoute {
     const self = this;
     const { validator } = self;
 
-    router.get('/', passport.authenticationMiddleware(), self.registerHandler('getQuestions'));
+    router.use(passport.authenticationMiddleware());
 
-    router.get('/tags/', passport.authenticationMiddleware(),
-      validator(validateTags), self.registerHandler('getQuestionsByTags'));
+    router.get('/', self.registerHandler('getQuestions'));
+    router.get('/tags/', validator(validateTags), self.registerHandler('getQuestionsByTags'));
+    router.get('/:id', validator(validateIdParam), self.registerHandler('getQuestion'));
 
-    router.get('/:id', passport.authenticationMiddleware(),
-      validator(validateIdParam), self.registerHandler('getQuestion'));
-
-    router.post('/', passport.authenticationMiddleware(),
+    router.post('/', multer.array('attachments'),
       validator(validateQuestionCreateInfo), self.registerHandler('createQuestion'));
 
-    router.put('/', passport.authenticationMiddleware(),
+    router.put('/', multer.array('attachments'),
       validator(validateQuestionUpdateInfo), self.registerHandler('updateQuestion'));
 
-    router.put('/:questionId/answers', passport.authenticationMiddleware(),
-      validator(validateUpdateAnswerInfo), self.registerHandler('updateAnswer'));
+    router.put('/:questionId/answers', validator(validateUpdateAnswerInfo), self.registerHandler('updateAnswer'));
 
-    router.put('/:questionId/:direction', passport.authenticationMiddleware(),
-      validator(validateVoteQuestionInfo), self.registerHandler('voteQuestion'));
-    router.delete('/:id', passport.authenticationMiddleware(),
-      validator(validateIdParam), self.registerHandler('deleteQuestion'));
+    router.put('/:questionId/:direction', validator(validateVoteQuestionInfo), self.registerHandler('voteQuestion'));
+    router.delete('/:id', validator(validateIdParam), self.registerHandler('deleteQuestion'));
 
 
-    router.post('/:questionId/answers', passport.authenticationMiddleware(),
-      validator(validateCreateAnswerInfo), self.registerHandler('createAnswer'));
+    router.post('/:questionId/answers', validator(validateCreateAnswerInfo), self.registerHandler('createAnswer'));
 
-    router.delete('/:questionId/answers/:answerId', passport.authenticationMiddleware(),
+    router.delete('/:questionId/answers/:answerId',
       validator(validateDeleteAnswer), self.registerHandler('deleteAnswer'));
 
-    router.put('/:questionId/answers/:answerId/vote/:direction', passport.authenticationMiddleware(),
+    router.put('/:questionId/answers/:answerId/vote/:direction',
       validator(validateVoteAnswerInfo), self.registerHandler('voteAnswer'));
   }
 

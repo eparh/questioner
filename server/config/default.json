@@ -1,6 +1,7 @@
 {
   "server" : {
     "port" : 3000,
+    "uploadDir": "uploads",
     "logger" : {
       "transports" : [
         "console"
