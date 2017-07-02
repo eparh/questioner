@@ -60,7 +60,7 @@ class QuestionController {
 
   updateAnswer(ctx) {
     const questionId = ctx.params.questionId;
-    const answer = ctx.request.body;
+    const answer = ctx.request.body.fields;
     const user = ctx.state.user;
 
     return this.questionService.updateAnswer(questionId, answer, user);

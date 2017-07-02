@@ -59,7 +59,9 @@ class QuestionRepository extends BaseRepository {
     },
     {
       $set: {
-        'answers.$': answer
+        'answers.$': Object.assign(answer, {
+          updatedAt: new Date()
+        })
       }
     });
   }
@@ -71,7 +73,7 @@ class QuestionRepository extends BaseRepository {
     {
       $pull: {
         answers: {
-          id: answerId
+          _id: answerId
         }
       }
     });

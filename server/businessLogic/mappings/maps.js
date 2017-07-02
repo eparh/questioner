@@ -6,5 +6,6 @@ const answer = require('./general/answer');
 module.exports = {
   mapCreateQuestion: question.mapCreateQuestion,
   mapUpdateQuestion: question.mapUpdateQuestion,
-  mapCreateAnswer: answer.mapCreateAnswer
+  mapCreateAnswer: answer.mapCreateAnswer,
+  mapUpdateAnswer: answer.mapUpdateAnswer
 };
