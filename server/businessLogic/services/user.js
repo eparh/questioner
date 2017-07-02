@@ -27,12 +27,6 @@ class UserService {
     });
   }
 
-  async isAdmin(id) {
-    const user = await this.findById(id);
-
-    return user.role === 'admin';
-  }
-
   findById(id) {
     return this.userRepository.findById(id);
   }

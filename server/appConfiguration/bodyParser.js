@@ -1,7 +1,9 @@
 'use strict';
 
-const bodyParser = require('koa-bodyparser');
+const bodyParser = require('koa-body');
 
 module.exports = (app) => {
-  app.use(bodyParser());
+  app.use(bodyParser({
+    multipart: true
+  }));
 };

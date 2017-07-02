@@ -22,8 +22,8 @@ class QuestionSchema extends BaseSchema {
           rating: ofType(Number),
           author: required(objectRef('User')),
           text: required(ofType(String)),
-          dateOfCreation: required(ofType(Date)),
-          dateOfUpdate: required(ofType(Date))
+          createdAt: required(ofType(Date)),
+          updatedAt: required(ofType(Date))
         }
       ]
     },

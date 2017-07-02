@@ -7,7 +7,6 @@ module.exports = (ctx) => {
 
   ctx.checkBody('_id').notEmpty().len(idLength, idLength, 'id\'s length should be 24');
   ctx.checkBody('text').notEmpty();
-  ctx.checkBody('author').notEmpty().len(idLength, idLength, 'author\'s length should be 24');
-  ctx.checkBody('rating').notEmpty();
+  ctx.checkBody('rating').notEmpty().isInt('rating should be int');
   return ctx.errors;
 };

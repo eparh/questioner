@@ -32,10 +32,24 @@ class QuestionRepository extends BaseRepository {
       },
       {
         $push: {
-          answers: answer
+          answers: Object.assign(answer, {
+            createdAt: new Date(),
+            updatedAt: new Date()
+          })
         }
       }
     );
+  }
+
+  getAnswerById(questionId, answerId) {
+    return this.Model.find({
+      _id: questionId,
+      'answers._id': answerId
+    },
+    {
+      'answers.$': 1,
+      _id: 0
+    });
   }
 
   updateAnswer(questionId, answer) {

@@ -24,27 +24,31 @@ class QuestionService {
     return this.questionRepository.getByTags(tags);
   }
 
-  createQuestion(question, attachments) {
+  createQuestion(question, attachments, user) {
     const { mapper, questionRepository } = this;
     const filePaths = attachments.map(file => file.path);
     const questionModel = mapper(question, 'mapCreateQuestion');
 
+    questionModel.author = user._id;
     questionModel.attachments = filePaths || [];
 
     return questionRepository.create(questionModel);
   }
 
-  updateQuestion(question, attachments) {
-    const { mapper, questionRepository } = this;
+  async updateQuestion(question, attachments, user) {
+    const { mapper, questionRepository, _hasPermission } = this;
     const questionModel = mapper(question, 'mapUpdateQuestion');
+    const filePaths = attachments.map(file => file.path);
 
-    if (attachments) {
-      const filePaths = attachments.map(file => file.path);
+    questionModel.attachments = filePaths;
 
-      questionModel.attachments = filePaths;
+    const questionInDB = await questionRepository.findById(questionModel._id);
+
+    if (_hasPermission(user, questionInDB)) {
+      return questionRepository.updateById(questionModel);
+    } else {
+      return;
     }
-
-    return questionRepository.updateById(questionModel);
   }
 
   voteQuestion(questionId, direction) {
@@ -57,26 +61,45 @@ class QuestionService {
     }
   }
 
-  deleteQuestion(id) {
+  deleteQuestion(id, user) {
+    const { questionRepository, _hasPermission } = this;
+    const questionInDB = questionRepository.findById(id);
 
-    return this.questionRepository.removeById(id);
+    if (_hasPermission(user, questionInDB)) {
+      return this.questionRepository.removeById(id);
+    } else {
+      return;
+    }
   }
 
-  createAnswer(questionId, answer) {
+  createAnswer(questionId, answer, user) {
     const { mapper, questionRepository } = this;
     const answerModel = mapper(answer, 'mapCreateAnswer');
 
+    answerModel.author = user._id;
     return questionRepository.addAnswer(questionId, answerModel);
   }
 
-  updateAnswer(questionId, answer) {
+  async updateAnswer(questionId, answer, user) {
+    const { questionRepository, _hasPermission } = this;
+    const answerInDB = (await questionRepository.getAnswerById(questionId, answer._id) || [])[0];
 
-    return this.questionRepository.updateAnswer(questionId, answer);
+    if (_hasPermission(user, answerInDB)) {
+      return questionRepository.updateAnswer(questionId, answer);
+    } else {
+      return;
+    }
   }
 
-  deleteAnswer(questionId, answerId) {
+  async deleteAnswer(questionId, answerId, user) {
+    const { questionRepository, _hasPermission } = this;
+    const answerInDB = (await questionRepository.getAnswerById(questionId, answerId) || [])[0];
 
-    return this.questionRepository.removeAnswer(questionId, answerId);
+    if (_hasPermission(user, answerInDB)) {
+      return this.questionRepository.removeAnswer(questionId, answerId);
+    } else {
+      return;
+    }
   }
 
   voteAnswer(questionId, answerId, direction) {
@@ -87,6 +110,10 @@ class QuestionService {
         return this.questionRepository.voteDownAnswer(questionId, answerId);
       default: return;
     }
+  }
+
+  _hasPermission(user, record) {
+    return user.role === 'admin' || user._id.equals(record.author);
   }
 }
 

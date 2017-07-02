@@ -22,17 +22,19 @@ class QuestionController {
   }
 
   createQuestion(ctx) {
-    const question = ctx.request.body;
+    const question = ctx.request.body.fields;
     const files = ctx.req.files;
+    const user = ctx.state.user;
 
-    return this.questionService.createQuestion(question, files);
+    return this.questionService.createQuestion(question, files, user);
   }
 
   updateQuestion(ctx) {
-    const question = ctx.request.body;
+    const question = ctx.request.body.fields;
     const files = ctx.req.files;
+    const user = ctx.state.user;
 
-    return this.questionService.updateQuestion(question, files);
+    return this.questionService.updateQuestion(question, files, user);
   }
 
   voteQuestion(ctx) {
@@ -43,28 +45,32 @@ class QuestionController {
 
   deleteQuestion(ctx) {
     const id = ctx.params.id;
+    const user = ctx.state.user;
 
-    return this.questionService.deleteQuestion(id);
+    return this.questionService.deleteQuestion(id, user);
   }
 
   createAnswer(ctx) {
     const questionId = ctx.params.questionId;
-    const answer = ctx.request.body;
+    const answer = ctx.request.body.fields;
+    const user = ctx.state.user;
 
-    return this.questionService.createAnswer(questionId, answer);
+    return this.questionService.createAnswer(questionId, answer, user);
   }
 
   updateAnswer(ctx) {
     const questionId = ctx.params.questionId;
     const answer = ctx.request.body;
+    const user = ctx.state.user;
 
-    return this.questionService.updateAnswer(questionId, answer);
+    return this.questionService.updateAnswer(questionId, answer, user);
   }
 
   deleteAnswer(ctx) {
     const { questionId, answerId } = ctx.params;
+    const user = ctx.state.user;
 
-    return this.questionService.deleteAnswer(questionId, answerId);
+    return this.questionService.deleteAnswer(questionId, answerId, user);
   }
 
   voteAnswer(ctx) {

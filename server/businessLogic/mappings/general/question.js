@@ -4,7 +4,6 @@ const mapCreateQuestion = {
   rating: 'rating',
   title: 'title',
   description: 'description',
-  author: 'author',
   tags: 'tags',
   answers: {
     key: 'answers',
@@ -17,7 +16,6 @@ const mapUpdateQuestion = {
   rating: 'rating',
   title: 'title',
   description: 'description',
-  author: 'author',
   tags: 'tags',
   answers: {
     key: 'answers',
