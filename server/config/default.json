@@ -14,5 +14,12 @@
       "user": "baseUser",
       "pass": "base17!"
     }
-    }
+  },
+  "validation": {
+    "messages": {
+      "idLength": "id's length should be 24",
+      "rating": "rating should be int'"
+    },
+    "idLength": 24
+  }
 }

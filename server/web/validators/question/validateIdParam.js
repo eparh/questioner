@@ -1,8 +1,10 @@
 'use strict';
 
-const idLength = 24;
+const config = require('config');
+const idLength = config.get('validation.idLength');
+const idMessage = config.get('validation.messages.idLength');
 
 module.exports = (ctx) => {
-  ctx.checkParams('id').notEmpty().len(idLength, idLength, 'id\'s length should be 24');
+  ctx.checkParams('id').notEmpty().len(idLength, idLength, idMessage);
   return ctx.errors;
 };
