@@ -20,6 +20,10 @@
       "idLength": "id's length should be 24",
       "rating": "rating should be int'"
     },
-    "idLength": 24
+    "idLength": 24,
+    "tagMinLength": 2,
+    "tagMaxLength": 20,
+    "credentialMinLength": 4,
+    "credentialMaxLength": 30
   }
 }

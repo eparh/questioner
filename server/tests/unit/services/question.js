@@ -343,7 +343,7 @@ describe('Conference Service', () => {
   });
 
   describe('voteAnswer', () => {
-    const { questionId, answer} = testData;
+    const { questionId, answer } = testData;
 
     it('should vote up', async () => {
       const questionRepository = createSpy({
