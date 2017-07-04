@@ -12,13 +12,8 @@ const questionsToCreate = [
       new mongoose.Types.ObjectId(),
       new mongoose.Types.ObjectId()
     ],
-    dateOfCreation: new Date(),
-    dateOfUpdate: new Date(),
     attachments: [
-      {
-        path: '/uploads/32342.jpg',
-        originalName: 'singer.jpg'
-      }
+      '/uploads/32342.jpg'
     ],
     answers: []
   },
@@ -31,21 +26,16 @@ const questionsToCreate = [
       new mongoose.Types.ObjectId(),
       new mongoose.Types.ObjectId()
     ],
-    dateOfCreation: new Date(),
-    dateOfUpdate: new Date(),
     attachments: [
-      {
-        path: '/uploads/32342.jpg',
-        originalName: 'singer.jpg'
-      }
+      '/uploads/32342.jpg'
     ],
     answers: [
       {
         rating: 0,
         author: new mongoose.Types.ObjectId(),
         text: 'Yeah',
-        dateOfCreation: new Date(),
-        dateOfUpdate: new Date()
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ]
   },
@@ -58,13 +48,8 @@ const questionsToCreate = [
       new mongoose.Types.ObjectId(),
       new mongoose.Types.ObjectId()
     ],
-    dateOfCreation: new Date(),
-    dateOfUpdate: new Date(),
     attachments: [
-      {
-        path: '/uploads/32342.jpg',
-        originalName: 'singer.jpg'
-      }
+      '/uploads/32342.jpg'
     ]
   }
 ];
@@ -77,21 +62,16 @@ const questionToCreate = {
     new mongoose.Types.ObjectId(),
     new mongoose.Types.ObjectId()
   ],
-  dateOfCreation: new Date(),
-  dateOfUpdate: new Date(),
   attachments: [
-    {
-      path: '/uploads/32342.jpg',
-      originalName: 'singer.jpg'
-    }
+    '/uploads/32342.jpg'
   ],
   answers: [
     {
       rating: 0,
       author: new mongoose.Types.ObjectId(),
       text: 'Yeah',
-      dateOfCreation: new Date(),
-      dateOfUpdate: new Date()
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
   ]
 };
@@ -104,9 +84,7 @@ const questionToUpdate = {
 const answer = {
   rating: 0,
   author: new mongoose.Types.ObjectId(),
-  text: 'To be or not to be',
-  dateOfCreation: new Date(),
-  dateOfUpdate: new Date()
+  text: 'To be or not to be'
 };
 const expectedAnswerText = 'To be or not to be';
 

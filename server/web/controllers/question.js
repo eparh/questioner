@@ -22,7 +22,7 @@ class QuestionController {
   }
 
   createQuestion(ctx) {
-    const question = ctx.request.body.fields;
+    const question = ctx.request.body;
     const files = ctx.req.files;
     const user = ctx.state.user;
 
@@ -30,7 +30,7 @@ class QuestionController {
   }
 
   updateQuestion(ctx) {
-    const question = ctx.request.body.fields;
+    const question = ctx.request.body;
     const files = ctx.req.files;
     const user = ctx.state.user;
 

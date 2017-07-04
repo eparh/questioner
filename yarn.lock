@@ -235,7 +235,7 @@ bluebird@2.10.2:
   version "2.10.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.10.2.tgz#024a5517295308857f14f91f1106fc3b555f446b"
 
-bluebird@^3.3.4:
+bluebird@^3.3.4, bluebird@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
@@ -1541,6 +1541,15 @@ koa-is-json@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/koa-is-json/-/koa-is-json-1.0.0.tgz#273c07edcdcb8df6a2c1ab7d59ee76491451ec14"
 
+koa-middle-validator@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/koa-middle-validator/-/koa-middle-validator-1.0.0.tgz#122f3b31ea0728cc2872b36197c9c4ac83fe9a1d"
+  dependencies:
+    bluebird "^3.5.0"
+    co "^4.6.0"
+    lodash "^4.17.4"
+    validator "^6.2.0"
+
 koa-multer@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/koa-multer/-/koa-multer-1.0.1.tgz#53a20b67ce7099ab80a25039e7b81f83feed80fc"
@@ -1587,6 +1596,14 @@ koa-validate@^1.0.7:
   dependencies:
     json-path "^0.1.3"
     validator "^5.2.0"
+
+koa2-validator@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/koa2-validator/-/koa2-validator-1.1.0.tgz#79236d1595224071a553fe1c8d6ac31b4ee7a225"
+  dependencies:
+    bluebird "^3.5.0"
+    lodash "^4.17.4"
+    validator "^6.2.0"
 
 koa@^2.2.0:
   version "2.2.0"
@@ -2847,6 +2864,10 @@ uuid@^3.0.0, uuid@^3.0.1:
 validator@^5.2.0:
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/validator/-/validator-5.7.0.tgz#7a87a58146b695ac486071141c0c49d67da05e5c"
+
+validator@^6.2.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-6.3.0.tgz#47ce23ed8d4eaddfa9d4b8ef0071b6cf1078d7c8"
 
 vary@^1.0.0:
   version "1.1.1"

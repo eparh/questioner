@@ -61,12 +61,12 @@ class QuestionService {
     }
   }
 
-  deleteQuestion(id, user) {
+  async deleteQuestion(id, user) {
     const { questionRepository, _hasPermission } = this;
-    const questionInDB = questionRepository.findById(id);
+    const questionInDB = await questionRepository.findById(id);
 
     if (_hasPermission(user, questionInDB)) {
-      return this.questionRepository.removeById(id);
+      return questionRepository.removeById(id);
     } else {
       return;
     }

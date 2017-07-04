@@ -6,6 +6,7 @@ const idMessage = config.get('validation.messages.idLength');
 const rating = config.get('validation.messages.rating');
 
 module.exports = (ctx) => {
+  ctx.request.body = ctx.req.body;
   ctx.checkBody('_id').notEmpty().len(idLength, idLength, idMessage);
   ctx.checkBody('title').notEmpty();
   ctx.checkBody('description').notEmpty();
