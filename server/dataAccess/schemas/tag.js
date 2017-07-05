@@ -4,10 +4,10 @@ const BaseSchema = require('./base');
 
 class TagSchema extends BaseSchema {
   get() {
-    const { Schema, ofType } = this;
+    const { Schema, ofType, required, unique } = this;
 
     return new Schema({
-      name: ofType(String)
+      name: unique(required(ofType(String)))
     });
   }
 }
