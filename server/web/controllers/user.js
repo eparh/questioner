@@ -7,7 +7,6 @@ class UserController {
 
   logout(ctx) {
     ctx.logout();
-    ctx.redirect('/');
   }
 
   register(ctx) {

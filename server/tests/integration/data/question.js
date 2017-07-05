@@ -56,7 +56,6 @@ const questionsToCreate = [
 
 const questionToCreate = {
   rating: 0,
-  author: new mongoose.Types.ObjectId(),
   title: 'What is love 4',
   description: 'No more',
   tags: [
@@ -65,8 +64,21 @@ const questionToCreate = {
   ]
 };
 
+const questionToUpdate = {
+  rating: 0,
+  title: 'Ring-ring',
+  description: 'No more',
+  tags: [
+    new mongoose.Types.ObjectId(),
+    new mongoose.Types.ObjectId()
+  ]
+};
+
+const pathToAttaches = './server/tests/integration/data/attachments/';
 
 module.exports = {
   questionsToCreate,
-  questionToCreate
+  questionToCreate,
+  pathToAttaches,
+  questionToUpdate
 };

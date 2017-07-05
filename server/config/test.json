@@ -1,6 +1,7 @@
 {
 	"server": {
-    "port": 3001
+      "uploadDir": "uploads",
+      "port": 3001
 	},
   "database": {
     "uri": "mongodb://localhost/base_test",

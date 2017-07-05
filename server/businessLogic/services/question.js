@@ -46,8 +46,6 @@ class QuestionService {
 
     if (_hasPermission(user, questionInDB)) {
       return questionRepository.updateById(questionModel);
-    } else {
-      return;
     }
   }
 

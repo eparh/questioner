@@ -17,7 +17,7 @@ function sendRequest(app, options) {
 
   if (options.attachments) {
     options.attachments.forEach((attachment) => {
-      req.attach(attachment.name, attachment.value);
+      req.attach('attachments', attachment);
     });
   }
 
