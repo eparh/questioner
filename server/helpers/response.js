@@ -2,7 +2,6 @@
 
 const { logger } = require('./iocContainer').getAllDependencies();
 
-const AppError = require('../businessLogic/models/errorDTO');
 const { serverError, success } = require('../constants').STATUS_CODES;
 
 class Response {
@@ -24,10 +23,7 @@ class Response {
     if (err) {
       logger.error(err);
       ctx.status = err.status || err.statusCode || serverError;
-
-      if (err instanceof AppError) {
-        ctx.body = err;
-      }
+      ctx.body = err || {};
     } else {
       ctx.status = data && data.statusCode || success;
       ctx.body = data;

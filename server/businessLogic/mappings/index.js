@@ -1,7 +1,7 @@
 'use strict';
 
-const question = require('./general/question');
-const answer = require('./general/answer');
+const question = require('./question');
+const answer = require('./answer');
 
 module.exports = {
   mapCreateQuestion: question.mapCreateQuestion,
