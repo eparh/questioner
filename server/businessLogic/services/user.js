@@ -1,24 +1,19 @@
 'use strict';
 
-const bcrypt = require('bcrypt-nodejs');
-
 class UserService {
-  constructor({ userRepository }) {
+  constructor({ userRepository, bcryptService }) {
     this.userRepository = userRepository;
+    this.bcryptService = bcryptService;
   }
 
   async register(formData) {
-    const { userRepository, generateHash } = this;
-
+    const { userRepository, bcryptService } = this;
     const user = await this.findByEmail(formData.email);
 
-    if (user) {
-      // to-do
-      return;
+    if (!user) {
+      formData.password = bcryptService.generateHash(formData.password);
+      return userRepository.create(formData);
     }
-
-    formData.password = generateHash(formData.password);
-    return userRepository.create(formData);
   }
 
   findByEmail(email) {
@@ -31,12 +26,8 @@ class UserService {
     return this.userRepository.findById(id);
   }
 
-  generateHash(password) {
-    return bcrypt.hashSync(password);
-  }
-
   validatePassword(password, passwordInDB) {
-    return bcrypt.compareSync(password, passwordInDB);
+    return this.bcryptService.validatePassword(password, passwordInDB);
   }
 }
 

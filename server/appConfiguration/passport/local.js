@@ -1,7 +1,7 @@
 'use strict';
 
 const LocalStrategy = require('passport-local').Strategy;
-const userService = require('../../helpers/iocContainer')._container.cradle.userService;
+const userService = require('../../helpers/iocContainer').resolve('userService');
 
 
 module.exports = new LocalStrategy({
