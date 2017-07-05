@@ -17,7 +17,7 @@ class UserRoute extends BaseRoute {
 
     router.post('/register', ratelimit, validator(validateRegisterInfo), self.registerHandler('register'));
     router.post('/login', ratelimit, validator(validateLoginInfo), passport.authenticate('local', {
-      failureRedirect: '/login',
+      failureRedirect: '/questions',
       successRedirect: '/questions'
     }));
     router.post('/logout', self.registerHandler('logout'));

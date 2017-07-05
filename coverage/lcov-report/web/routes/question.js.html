@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">16.67% </span>
+        <span class="strong">44.83% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>3/18</span>
+        <span class='fraction'>13/29</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>0/3</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">16.67% </span>
+        <span class="strong">44.83% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>3/18</span>
+        <span class='fraction'>13/29</span>
       </div>
     </div>
   </div>
@@ -80,11 +80,42 @@
 35
 36
 37
-38</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -93,26 +124,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -120,8 +162,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
 &nbsp;
 const BaseRoute = require('./base');
-// const auth = require('../../middlewares/security/auth');
-const auth = {};
+&nbsp;
+const validateQuestionCreateInfo = require('../validators/question/validateQuestionCreateInfo');
+const validateQuestionUpdateInfo = require('../validators/question/validateQuestionUpdateInfo');
+const validateIdParam = require('../validators/question/validateIdParam');
+const validateTags = require('../validators/question/validateTags');
+const validateUpdateAnswerInfo = require('../validators/question/validateUpdateAnswerInfo');
+const validateCreateAnswerInfo = require('../validators/question/validateCreateAnswerInfo');
+const validateVoteQuestionInfo = require('../validators/question/validateVoteQuestionInfo');
+const validateVoteAnswerInfo = require('../validators/question/validateVoteAnswerInfo');
+const validateDeleteAnswer = require('../validators/question/validateDeleteAnswer');
+const passport = require('passport');
+const multer = require('../../middlewares/fileUploading/multer')();
 &nbsp;
 class QuestionRoute extends BaseRoute {
   constructor<span class="fstat-no" title="function not covered" >({ questionController }) {</span>
@@ -130,27 +182,38 @@ class QuestionRoute extends BaseRoute {
 &nbsp;
   get<span class="fstat-no" title="function not covered" >(router) {</span>
 <span class="cstat-no" title="statement not covered" >    const self = this;</span>
+<span class="cstat-no" title="statement not covered" >    const { validator } = self;</span>
 &nbsp;
-    // const { validator } = self;
+<span class="cstat-no" title="statement not covered" >    router.use(passport.authenticationMiddleware());</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    router.get('/questions', auth, self.registerHandler('getQuestions'));</span>
-<span class="cstat-no" title="statement not covered" >    router.post('/question', auth, self.registerHandler('createQuestion'));</span>
-<span class="cstat-no" title="statement not covered" >    router.post('/answer', auth, self.registerHandler('createAnswer'));</span>
-<span class="cstat-no" title="statement not covered" >    router.put('/question', auth, self.registerHandler('updateQuestion'));</span>
-<span class="cstat-no" title="statement not covered" >    router.put('/answer', auth, self.registerHandler('updateAnswer'));</span>
-<span class="cstat-no" title="statement not covered" >    router.delete('/question', auth, self.registerHandler('deleteQuestion'));</span>
-<span class="cstat-no" title="statement not covered" >    router.delete('/answer', auth, self.registerHandler('deleteAnswer'));</span>
-<span class="cstat-no" title="statement not covered" >    router.put('/question/vote/:direction', auth, self.registerHandler('voteQuestion'));</span>
-<span class="cstat-no" title="statement not covered" >    router.put('/answer/vote/:direction', auth, self.registerHandler('voteAnswer'));</span>
-<span class="cstat-no" title="statement not covered" >    router.post('/tag', auth, self.registerHandler('createTag'));</span>
-<span class="cstat-no" title="statement not covered" >    router.put('/tag', auth, self.registerHandler('updateTag'));</span>
-<span class="cstat-no" title="statement not covered" >    router.delete('/tag', auth, self.registerHandler('deleteTag'));</span>
+<span class="cstat-no" title="statement not covered" >    router.get('/', self.registerHandler('getQuestions'));</span>
+<span class="cstat-no" title="statement not covered" >    router.get('/tags/', validator(validateTags), self.registerHandler('getQuestionsByTags'));</span>
+<span class="cstat-no" title="statement not covered" >    router.get('/:id', validator(validateIdParam), self.registerHandler('getQuestion'));</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    router.post('/', multer.array('attachments'),</span>
+      validator(validateQuestionCreateInfo), self.registerHandler('createQuestion'));
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    router.put('/', multer.array('attachments'),</span>
+      validator(validateQuestionUpdateInfo), self.registerHandler('updateQuestion'));
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    router.put('/:questionId/answers', validator(validateUpdateAnswerInfo), self.registerHandler('updateAnswer'));</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    router.put('/:questionId/:direction', validator(validateVoteQuestionInfo), self.registerHandler('voteQuestion'));</span>
+<span class="cstat-no" title="statement not covered" >    router.delete('/:id', validator(validateIdParam), self.registerHandler('deleteQuestion'));</span>
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    router.post('/:questionId/answers', validator(validateCreateAnswerInfo), self.registerHandler('createAnswer'));</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    router.delete('/:questionId/answers/:answerId',</span>
+      validator(validateDeleteAnswer), self.registerHandler('deleteAnswer'));
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    router.put('/:questionId/answers/:answerId/vote/:direction',</span>
+      validator(validateVoteAnswerInfo), self.registerHandler('voteAnswer'));
   }
 &nbsp;
   getBaseUrl<span class="fstat-no" title="function not covered" >() {</span>
-<span class="cstat-no" title="statement not covered" >    return '/';</span>
+<span class="cstat-no" title="statement not covered" >    return '/questions';</span>
   }
-&nbsp;
 }
 &nbsp;
 module.exports = QuestionRoute;
@@ -160,7 +223,7 @@ module.exports = QuestionRoute;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jun 23 2017 11:55:32 GMT+0300 (+03)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jul 04 2017 05:32:58 GMT+0300 (+03)
 </div>
 </div>
 <script src="../../prettify.js"></script>

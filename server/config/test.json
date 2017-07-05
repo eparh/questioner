@@ -1,9 +1,6 @@
 {
 	"server": {
-    "port": 3001,
-    "logger": {
-      "transports": []
-    }
+    "port": 3001
 	},
   "database": {
     "uri": "mongodb://localhost/base_test",

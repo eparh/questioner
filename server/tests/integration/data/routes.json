@@ -1,0 +1,11 @@
+{
+  "questions": {
+    "url": "/questions/"
+  },
+  "tags": {
+    "user": "/tags/"
+  },
+  "users": {
+    "url": "/users/"
+  }
+}
