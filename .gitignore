@@ -1,7 +1,7 @@
 .idea/
 *.DS_Store
 node_modules/
-coverage
+coverage/*
 uploads
 complexity
 server/config
