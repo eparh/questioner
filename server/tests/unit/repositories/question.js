@@ -8,7 +8,9 @@ const { clearCollections } = require('../../helpers/database');
 
 const { questionRepository } = require('../../../helpers/iocContainer').getAllDependencies();
 
-const { questionsToCreate, questionToCreate, questionToUpdate, answer } = require('./data/question');
+const {
+  questionsToCreate, questionToCreate, questionToUpdate, answer, questionTest, authorId
+} = require('./data/question');
 
 function cleanup() {
   return clearCollections([questionRepository.Model.modelName]);
@@ -135,25 +137,21 @@ describe('Question Repository', () => {
 
     describe('#voteUpQuestion', () => {
       it('should vote up', async () => {
-        await questionRepository.voteUpQuestion(newQuestionId);
+        await questionRepository.voteUpQuestion(newQuestionId, authorId);
 
         const updatedQuestion = await questionRepository.findById(newQuestionId);
 
-        expect(updatedQuestion).to.include({
-          rating: 1
-        });
+        return expect(updatedQuestion).to.have.property('voters').that.is.not.empty;
       });
     });
 
     describe('#voteDownQuestion', () => {
       it('should vote down', async () => {
-        await questionRepository.voteDownQuestion(newQuestionId);
+        await questionRepository.voteDownQuestion(newQuestionId, authorId);
 
         const updatedQuestion = await questionRepository.findById(newQuestionId);
 
-        expect(updatedQuestion).to.include({
-          rating: -1
-        });
+        return expect(updatedQuestion).to.have.property('voters').that.is.not.empty;
       });
     });
 
@@ -179,6 +177,22 @@ describe('Question Repository', () => {
           rating: -1
         });
       });
+    });
+  });
+
+  describe('#getInfo', () => {
+    let newQuestionId;
+
+    before(async () => {
+      const newQuestion = await questionRepository.create(questionTest);
+
+      newQuestionId = newQuestion._id;
+    });
+
+    it('should get in', async () => {
+      const result = await questionRepository.getById(newQuestionId);
+
+      return expect(result).to.exist;
     });
   });
 

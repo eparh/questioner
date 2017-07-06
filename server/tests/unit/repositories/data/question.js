@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 
 const questionsToCreate = [
   {
-    rating: 0,
     author: new mongoose.Types.ObjectId(),
     title: 'What is love 1',
     description: 'Babe don\'t hurt me',
@@ -18,7 +17,6 @@ const questionsToCreate = [
     answers: []
   },
   {
-    rating: 0,
     author: new mongoose.Types.ObjectId(),
     title: 'What is love 2',
     description: 'No more',
@@ -40,7 +38,6 @@ const questionsToCreate = [
     ]
   },
   {
-    rating: 0,
     author: new mongoose.Types.ObjectId(),
     title: 'What is love 3',
     description: 'No more',
@@ -54,10 +51,10 @@ const questionsToCreate = [
   }
 ];
 const questionToCreate = {
-  rating: 0,
   author: new mongoose.Types.ObjectId(),
   title: 'What is love',
   description: 'No more',
+  voters: {},
   tags: [
     new mongoose.Types.ObjectId(),
     new mongoose.Types.ObjectId()
@@ -87,10 +84,45 @@ const answer = {
 };
 const expectedAnswerText = 'To be or not to be';
 
+const questionTest = {
+  author: new mongoose.Types.ObjectId(),
+  title: 'What is love',
+  description: 'No more',
+  tags: [
+    new mongoose.Types.ObjectId(),
+    new mongoose.Types.ObjectId()
+  ],
+  attachments: [
+    '/uploads/32342.jpg'
+  ],
+  voters: {
+    [new mongoose.Types.ObjectId()]: 1,
+    [new mongoose.Types.ObjectId()]: 1,
+    [new mongoose.Types.ObjectId()]: 1,
+    [new mongoose.Types.ObjectId()]: 1,
+    [new mongoose.Types.ObjectId()]: 1,
+    [new mongoose.Types.ObjectId()]: -1,
+    [new mongoose.Types.ObjectId()]: -1
+  },
+  answers: [
+    {
+      rating: 0,
+      author: new mongoose.Types.ObjectId(),
+      text: 'Yeah',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+  ]
+};
+
+const authorId = new mongoose.Types.ObjectId();
+
 module.exports = {
   questionsToCreate,
   questionToCreate,
   questionToUpdate,
   answer,
-  expectedAnswerText
+  expectedAnswerText,
+  questionTest,
+  authorId
 };

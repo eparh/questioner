@@ -6,9 +6,8 @@ class QuestionSchema extends BaseSchema {
   get() {
     const { Schema, ofType, withDefault, required, objectRef } = this;
 
-    return new Schema({
-      rating: withDefault(ofType(Number), 0),
-      author: objectRef('User'),
+    const questionSchema = new Schema({
+      author: required(objectRef('User')),
       title: required(ofType(String)),
       description: required(ofType(String)),
       tags: [
@@ -17,6 +16,7 @@ class QuestionSchema extends BaseSchema {
       attachments: [
         ofType(String)
       ],
+      voters: ofType(Object),
       answers: [
         {
           rating: ofType(Number),
@@ -28,8 +28,25 @@ class QuestionSchema extends BaseSchema {
       ]
     },
     {
-      timestamps: true
+      timestamps: true,
+      toObject: {
+        virtuals: true
+      },
+      toJSON: {
+        virtuals: true
+      }
     });
+
+    questionSchema.virtual('rating')
+      .get(function() {
+        const voters = Object.assign({}, this.voters);
+
+        return Object.values(voters).reduce((sum, value) => {
+          return sum + value;
+        }, 0);
+      });
+
+    return questionSchema;
   }
 }
 

@@ -57,6 +57,7 @@ const questionsToCreate = [
 const questionToCreate = {
   rating: 0,
   title: 'What is love 4',
+  author: new mongoose.Types.ObjectId(),
   description: 'No more',
   tags: [
     new mongoose.Types.ObjectId(),
@@ -67,6 +68,7 @@ const questionToCreate = {
 const questionToUpdate = {
   rating: 0,
   title: 'Ring-ring',
+  author: new mongoose.Types.ObjectId(),
   description: 'No more',
   tags: [
     new mongoose.Types.ObjectId(),

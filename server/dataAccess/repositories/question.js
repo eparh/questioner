@@ -74,26 +74,32 @@ class QuestionRepository extends BaseRepository {
     });
   }
 
-  voteUpQuestion(questionId) {
+  voteUpQuestion(questionId, voterId) {
+    const target = `voters.${voterId}`;
+
     return this.Model.update({
       _id: questionId
     },
     {
-      $inc: {
-        rating: 1
+      $set: {
+        [target]: 1
       }
-    });
+    }
+    );
   }
 
-  voteDownQuestion(questionId) {
+  voteDownQuestion(questionId, voterId) {
+    const target = `voters.${voterId}`;
+
     return this.Model.update({
       _id: questionId
     },
     {
-      $inc: {
-        rating: -1
+      $set: {
+        [target]: -1
       }
-    });
+    }
+    );
   }
 
   voteUpAnswer(questionId, answerId) {
