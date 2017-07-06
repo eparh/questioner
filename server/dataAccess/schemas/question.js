@@ -1,10 +1,11 @@
 'use strict';
 
 const BaseSchema = require('./base');
+const AnswerSchema = require('./embedded/answer');
 
 class QuestionSchema extends BaseSchema {
   get() {
-    const { Schema, ofType, withDefault, required, objectRef } = this;
+    const { Schema, ofType, required, objectRef } = this;
 
     const questionSchema = new Schema({
       author: required(objectRef('User')),
@@ -17,15 +18,7 @@ class QuestionSchema extends BaseSchema {
         ofType(String)
       ],
       voters: ofType(Object),
-      answers: [
-        {
-          rating: ofType(Number),
-          author: required(objectRef('User')),
-          text: required(ofType(String)),
-          createdAt: withDefault(required(ofType(Date)), new Date()),
-          updatedAt: withDefault(required(ofType(Date)), new Date())
-        }
-      ]
+      answers: [(new AnswerSchema()).get()]
     },
     {
       timestamps: true,
