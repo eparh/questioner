@@ -39,14 +39,16 @@ class QuestionController {
 
   voteUpQuestion(ctx) {
     const { questionId } = ctx.params;
+    const voterId = ctx.state.user._id;
 
-    return this.questionService.voteUpQuestion(questionId);
+    return this.questionService.voteUpQuestion(questionId, voterId);
   }
 
   voteDownQuestion(ctx) {
     const { questionId } = ctx.params;
+    const voterId = ctx.state.user._id;
 
-    return this.questionService.voteDownQuestion(questionId);
+    return this.questionService.voteDownQuestion(questionId, voterId);
   }
 
   deleteQuestion(ctx) {
@@ -79,22 +81,18 @@ class QuestionController {
     return this.questionService.deleteAnswer(questionId, answerId, user);
   }
 
-  voteAnswer(ctx) {
-    const { questionId, answerId, direction } = ctx.params;
-
-    return this.questionService.voteAnswer(questionId, answerId, direction);
-  }
-
   voteUpAnswer(ctx) {
     const { questionId, answerId } = ctx.params;
+    const voterId = ctx.state.user._id;
 
-    return this.questionService.voteUpAnswer(questionId, answerId);
+    return this.questionService.voteUpAnswer(questionId, answerId, voterId);
   }
 
   voteDownAnswer(ctx) {
     const { questionId, answerId } = ctx.params;
+    const voterId = ctx.state.user._id;
 
-    return this.questionService.voteDownAnswer(questionId, answerId);
+    return this.questionService.voteDownAnswer(questionId, answerId, voterId);
   }
 }
 

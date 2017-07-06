@@ -337,7 +337,7 @@ describe('Conference Service', () => {
         questionRepository
       });
 
-      service.voteAnswer(questionId, answer._id, 'up');
+      service.voteUpAnswer(questionId, answer._id);
       const result = questionRepository.voteUpAnswer.called;
 
       return expect(result).to.be.true;
@@ -351,30 +351,11 @@ describe('Conference Service', () => {
         questionRepository
       });
 
-      service.voteAnswer(questionId, answer._id, 'down');
+      service.voteDownAnswer(questionId, answer._id);
       const result = questionRepository.voteDownAnswer.called;
 
       return expect(result).to.be.true;
     });
 
-    it('should\'nt vote', async () => {
-      const questionRepository = Object.assign(
-        createSpy({
-          methodName: 'voteUpAnswer'
-        }),
-        createSpy({
-          methodName: 'voteDownAnswer'
-        })
-      );
-      const service = new QuestionService({
-        questionRepository
-      });
-
-      service.voteAnswer(questionId, answer._id);
-      const result = questionRepository.voteUpAnswer.called ||
-        questionRepository.voteDownAnswer.called;
-
-      return expect(result).to.be.false;
-    });
   });
 });

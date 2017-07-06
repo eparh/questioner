@@ -44,12 +44,12 @@ class QuestionService {
     }
   }
 
-  voteUpQuestion(questionId) {
-    return this.questionRepository.voteUpQuestion(questionId);
+  voteUpQuestion(questionId, voterId) {
+    return this.questionRepository.voteUpQuestion(questionId, voterId);
   }
 
-  voteDownQuestion(questionId) {
-    return this.questionRepository.voteDownQuestion(questionId);
+  voteDownQuestion(questionId, voterId) {
+    return this.questionRepository.voteDownQuestion(questionId, voterId);
   }
 
   async deleteQuestion(id, user) {
@@ -93,22 +93,12 @@ class QuestionService {
     }
   }
 
-  voteAnswer(questionId, answerId, direction) {
-    switch (direction) {
-      case 'up':
-        return this.questionRepository.voteUpAnswer(questionId, answerId);
-      case 'down':
-        return this.questionRepository.voteDownAnswer(questionId, answerId);
-      default: return;
-    }
+  voteDownAnswer(questionId, answerId, voterId) {
+    return this.questionRepository.voteDownAnswer(questionId, answerId, voterId);
   }
 
-  voteDownAnswer(questionId, answerId) {
-    return this.questionRepository.voteDownAnswer(questionId, answerId);
-  }
-
-  voteUpAnswer(questionId, answerId) {
-    return this.questionRepository.voteUpAnswer(questionId, answerId);
+  voteUpAnswer(questionId, answerId, voterId) {
+    return this.questionRepository.voteUpAnswer(questionId, answerId, voterId);
   }
 
   _hasPermission(user, record) {
