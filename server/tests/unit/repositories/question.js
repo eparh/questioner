@@ -8,9 +8,7 @@ const { clearCollections } = require('../../helpers/database');
 
 const { questionRepository } = require('../../../helpers/iocContainer').getAllDependencies();
 
-const {
-  questionsToCreate, questionToCreate, questionToUpdate, answer, questionTest, authorId
-} = require('./data/question');
+const { questionsToCreate, questionToCreate, questionToUpdate, answer, authorId } = require('./data/question');
 
 function cleanup() {
   return clearCollections([questionRepository.Model.modelName]);
@@ -157,7 +155,7 @@ describe('Question Repository', () => {
 
     describe('#voteUpAnswer', () => {
       it('should vote down', async () => {
-        await questionRepository.voteUpAnswer(newQuestionId, relatedAnswerId);
+        await questionRepository.voteUpAnswer(newQuestionId, relatedAnswerId, authorId);
 
         const updatedQuestion = await questionRepository.findById(newQuestionId);
 
@@ -177,22 +175,6 @@ describe('Question Repository', () => {
           rating: -1
         });
       });
-    });
-  });
-
-  describe('#getInfo', () => {
-    let newQuestionId;
-
-    before(async () => {
-      const newQuestion = await questionRepository.create(questionTest);
-
-      newQuestionId = newQuestion._id;
-    });
-
-    it('should get in', async () => {
-      const result = await questionRepository.getById(newQuestionId);
-
-      return expect(result).to.exist;
     });
   });
 

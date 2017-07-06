@@ -29,11 +29,8 @@ const questionsToCreate = [
     ],
     answers: [
       {
-        rating: 0,
         author: new mongoose.Types.ObjectId(),
-        text: 'Yeah',
-        createdAt: new Date(),
-        updatedAt: new Date()
+        text: 'Yeah'
       }
     ]
   },
@@ -64,11 +61,9 @@ const questionToCreate = {
   ],
   answers: [
     {
-      rating: 0,
       author: new mongoose.Types.ObjectId(),
       text: 'Yeah',
-      createdAt: new Date(),
-      updatedAt: new Date()
+      voters: {}
     }
   ]
 };
@@ -84,37 +79,6 @@ const answer = {
 };
 const expectedAnswerText = 'To be or not to be';
 
-const questionTest = {
-  author: new mongoose.Types.ObjectId(),
-  title: 'What is love',
-  description: 'No more',
-  tags: [
-    new mongoose.Types.ObjectId(),
-    new mongoose.Types.ObjectId()
-  ],
-  attachments: [
-    '/uploads/32342.jpg'
-  ],
-  voters: {
-    [new mongoose.Types.ObjectId()]: 1,
-    [new mongoose.Types.ObjectId()]: 1,
-    [new mongoose.Types.ObjectId()]: 1,
-    [new mongoose.Types.ObjectId()]: 1,
-    [new mongoose.Types.ObjectId()]: 1,
-    [new mongoose.Types.ObjectId()]: -1,
-    [new mongoose.Types.ObjectId()]: -1
-  },
-  answers: [
-    {
-      rating: 0,
-      author: new mongoose.Types.ObjectId(),
-      text: 'Yeah',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }
-  ]
-};
-
 const authorId = new mongoose.Types.ObjectId();
 
 module.exports = {
@@ -123,6 +87,5 @@ module.exports = {
   questionToUpdate,
   answer,
   expectedAnswerText,
-  questionTest,
   authorId
 };

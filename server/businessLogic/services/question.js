@@ -103,6 +103,14 @@ class QuestionService {
     }
   }
 
+  voteDownAnswer(questionId, answerId) {
+    return this.questionRepository.voteDownAnswer(questionId, answerId);
+  }
+
+  voteUpAnswer(questionId, answerId) {
+    return this.questionRepository.voteUpAnswer(questionId, answerId);
+  }
+
   _hasPermission(user, record) {
     return user.role === 'admin' || user._id.equals(record.author);
   }

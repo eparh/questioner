@@ -6,12 +6,13 @@ class AnswerSchema extends BaseSchema {
   get() {
     const { Schema, ofType, required, objectRef } = this;
 
-    return new Schema({
-      rating: ofType(Number),
+    const answerSchema = new Schema({
+      voters: ofType(Object),
       author: required(objectRef('User')),
       text: required(ofType(String))
     },
     {
+      timestamps: true,
       toObject: {
         virtuals: true
       },
@@ -19,6 +20,17 @@ class AnswerSchema extends BaseSchema {
         virtuals: true
       }
     });
+
+    answerSchema.virtual('rating')
+      .get(function() {
+        const voters = Object.assign({}, this.voters);
+
+        return Object.values(voters).reduce((sum, value) => {
+          return sum + value;
+        }, 0);
+      });
+
+    return answerSchema;
   }
 }
 

@@ -84,6 +84,18 @@ class QuestionController {
 
     return this.questionService.voteAnswer(questionId, answerId, direction);
   }
+
+  voteUpAnswer(ctx) {
+    const { questionId, answerId } = ctx.params;
+
+    return this.questionService.voteUpAnswer(questionId, answerId);
+  }
+
+  voteDownAnswer(ctx) {
+    const { questionId, answerId } = ctx.params;
+
+    return this.questionService.voteDownAnswer(questionId, answerId);
+  }
 }
 
 module.exports = QuestionController;

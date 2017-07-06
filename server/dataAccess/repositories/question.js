@@ -102,26 +102,30 @@ class QuestionRepository extends BaseRepository {
     );
   }
 
-  voteUpAnswer(questionId, answerId) {
+  voteUpAnswer(questionId, answerId, voterId) {
+    const target = `answers.$.voters.${voterId}`;
+
     return this.Model.update({
       _id: questionId,
       'answers._id': answerId
     },
     {
-      $inc: {
-        'answers.$.rating': 1
+      $set: {
+        [target]: 1
       }
     });
   }
 
-  voteDownAnswer(questionId, answerId) {
+  voteDownAnswer(questionId, answerId, voterId) {
+    const target = `answers.$.voters.${voterId}`;
+
     return this.Model.update({
       _id: questionId,
       'answers._id': answerId
     },
     {
-      $inc: {
-        'answers.$.rating': -1
+      $set: {
+        [target]: -1
       }
     });
   }
