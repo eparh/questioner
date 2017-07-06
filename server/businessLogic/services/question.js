@@ -13,15 +13,10 @@ class QuestionService {
     return this.questionRepository.getById(id);
   }
 
-  getByTags(income) {
-    let tags = income;
+  getByTags(tags) {
+    const tagsArray = Array.isArray(tags) ? tags : [tags];
 
-    if (!Array.isArray(income)) {
-      tags = [];
-      tags.push(income);
-    }
-
-    return this.questionRepository.getByTags(tags);
+    return this.questionRepository.getByTags(tagsArray);
   }
 
   createQuestion(question, attachments, user) {

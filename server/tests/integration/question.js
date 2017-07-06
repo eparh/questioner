@@ -101,21 +101,37 @@ describe('Question API Test', () => {
 
   describe('[GET] /questions/tags', () => {
     const { questionsToCreate } = testData;
-    let tagQuery;
+    let tags;
 
-    before(async () => {
+    beforeEach(async () => {
       const promises = questionsToCreate.map(question => questionRepository.create(question));
 
       await Promise.all(promises);
-
-      const tags = questionsToCreate[0].tags.map(tag => tag.toString());
-
-      tagQuery = queryString.stringify({
-        tags
-      });
+      tags = questionsToCreate[0].tags.map(tag => tag.toString());
     });
 
-    it('should get questions', async () => {
+    it('should get questions by tags', async () => {
+      const tagQuery = queryString.stringify({
+        tags
+      });
+
+      const response = await queryConstructor.sendRequest({
+        method: 'get',
+        url: `${routes.questions.url}/tags?${tagQuery}`,
+        expect: statusCodes.success,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body).to.be.an('array').that.has.length(1);
+    });
+
+    it('should get questions by tag', async () => {
+      const tagQuery = queryString.stringify({
+        tags: tags[1]
+      });
+
       const response = await queryConstructor.sendRequest({
         method: 'get',
         url: `${routes.questions.url}/tags?${tagQuery}`,
@@ -131,7 +147,7 @@ describe('Question API Test', () => {
     it('should not get questions', async () => {
       await queryConstructor.sendRequest({
         method: 'get',
-        url: `${routes.questions.url}/tags?${tagQuery}`,
+        url: `${routes.questions.url}/tags`,
         expect: 302
       });
     });
