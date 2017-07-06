@@ -44,14 +44,12 @@ class QuestionService {
     }
   }
 
-  voteQuestion(questionId, direction) {
-    switch (direction) {
-      case 'up':
-        return this.questionRepository.voteUpQuestion(questionId);
-      case 'down':
-        return this.questionRepository.voteDownQuestion(questionId);
-      default: return;
-    }
+  voteUpQuestion(questionId) {
+    return this.questionRepository.voteUpQuestion(questionId);
+  }
+
+  voteDownQuestion(questionId) {
+    return this.questionRepository.voteDownQuestion(questionId);
   }
 
   async deleteQuestion(id, user) {

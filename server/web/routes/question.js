@@ -37,7 +37,10 @@ class QuestionRoute extends BaseRoute {
 
     router.put('/:questionId/answers', validator(validateUpdateAnswerInfo), self.registerHandler('updateAnswer'));
 
-    router.put('/:questionId/:direction', validator(validateVoteQuestionInfo), self.registerHandler('voteQuestion'));
+    router.put('/:questionId/up', validator(validateVoteQuestionInfo), self.registerHandler('voteUpQuestion'));
+
+    router.put('/:questionId/down', validator(validateVoteQuestionInfo), self.registerHandler('voteDownQuestion'));
+
     router.delete('/:id', validator(validateIdParam), self.registerHandler('deleteQuestion'));
 
 

@@ -145,7 +145,7 @@ describe('Conference Service', () => {
     });
   });
 
-  describe('voteQuestion', () => {
+  describe('voteUpQuestion', () => {
     const { questionId } = testData;
 
     it('should vote up', async () => {
@@ -156,11 +156,15 @@ describe('Conference Service', () => {
         questionRepository
       });
 
-      service.voteQuestion(questionId, 'up');
+      service.voteUpQuestion(questionId);
       const result = questionRepository.voteUpQuestion.called;
 
       return expect(result).to.be.true;
     });
+  });
+
+  describe('voteDownQuestion', () => {
+    const { questionId } = testData;
 
     it('should vote down', async () => {
       const questionRepository = createSpy({
@@ -170,30 +174,10 @@ describe('Conference Service', () => {
         questionRepository
       });
 
-      service.voteQuestion(questionId, 'down');
+      service.voteDownQuestion(questionId);
       const result = questionRepository.voteDownQuestion.called;
 
       return expect(result).to.be.true;
-    });
-
-    it('should\'nt vote', async () => {
-      const questionRepository = Object.assign(
-        createSpy({
-          methodName: 'voteUpQuestion'
-        }),
-        createSpy({
-          methodName: 'voteDownQuestion'
-        })
-      );
-      const service = new QuestionService({
-        questionRepository
-      });
-
-      service.voteQuestion(questionId);
-      const result = questionRepository.voteUpQuestion.called ||
-        questionRepository.voteDownQuestion.called;
-
-      return expect(result).to.be.false;
     });
   });
 

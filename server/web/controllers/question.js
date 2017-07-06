@@ -37,10 +37,16 @@ class QuestionController {
     return this.questionService.updateQuestion(question, files, user);
   }
 
-  voteQuestion(ctx) {
-    const { questionId, direction } = ctx.params;
+  voteUpQuestion(ctx) {
+    const { questionId } = ctx.params;
 
-    return this.questionService.voteQuestion(questionId, direction);
+    return this.questionService.voteUpQuestion(questionId);
+  }
+
+  voteDownQuestion(ctx) {
+    const { questionId } = ctx.params;
+
+    return this.questionService.voteDownQuestion(questionId);
   }
 
   deleteQuestion(ctx) {
