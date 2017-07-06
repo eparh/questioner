@@ -120,7 +120,7 @@ describe('Question Repository', () => {
         const updatedQuestion = await questionRepository.findById(newQuestionId);
 
         expect(updatedQuestion).to.have.property('answers').with.length(1);
-        expect(updatedQuestion.answers[0]).to.deep.equal(answer);
+        expect(updatedQuestion.answers[0]).to.deep.include(answer);
       });
     });
 

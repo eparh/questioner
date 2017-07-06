@@ -83,7 +83,6 @@ const questionToUpdate = {
 
 const answer = {
   rating: 0,
-  author: new mongoose.Types.ObjectId(),
   text: 'To be or not to be'
 };
 const expectedAnswerText = 'To be or not to be';

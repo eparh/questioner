@@ -34,9 +34,9 @@ class BaseRepository {
 
   async findOne(query, attributes) {
     const self = this;
-    const models = await this.Model.findOne(query, attributes);
+    const model = await this.Model.findOne(query, attributes);
 
-    return self.toJSON(models);
+    return self.toJSON(model);
   }
 
   async findById(id) {
