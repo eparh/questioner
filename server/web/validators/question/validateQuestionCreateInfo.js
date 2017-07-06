@@ -12,7 +12,6 @@ module.exports = (ctx) => {
   ctx.checkBody('rating').notEmpty().isInt(rating);
   ctx.checkBody('tags').optional();
   ctx.checkBody('attachments').optional();
-  return ctx.errors;
 };
 
 

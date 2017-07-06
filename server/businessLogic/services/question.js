@@ -25,7 +25,7 @@ class QuestionService {
     const questionModel = mapper(question, 'mapCreateQuestion');
 
     questionModel.author = user._id;
-    questionModel.attachments = filePaths || [];
+    questionModel.attachments = filePaths;
 
     return questionRepository.create(questionModel);
   }
@@ -58,8 +58,6 @@ class QuestionService {
 
     if (_hasPermission(user, questionInDB)) {
       return questionRepository.removeById(id);
-    } else {
-      return;
     }
   }
 
@@ -77,8 +75,6 @@ class QuestionService {
 
     if (_hasPermission(user, answerInDB)) {
       return questionRepository.updateAnswer(questionId, answer);
-    } else {
-      return;
     }
   }
 
@@ -88,8 +84,6 @@ class QuestionService {
 
     if (_hasPermission(user, answerInDB)) {
       return this.questionRepository.removeAnswer(questionId, answerId);
-    } else {
-      return;
     }
   }
 

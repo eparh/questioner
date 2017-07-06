@@ -10,5 +10,4 @@ module.exports = (ctx) => {
 
   ctx.checkBody('text').notEmpty();
   ctx.checkBody('rating').notEmpty().isInt(rating);
-  return ctx.errors;
 };
