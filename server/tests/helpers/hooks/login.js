@@ -4,16 +4,7 @@ const request = require('request');
 const serverConfig = require('config').get('server');
 const PORT = serverConfig.get('port');
 
-const options = {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    email: 'test@gmail.com',
-    password: 'password'
-  })
-};
+const options = require('../../integration/data/login');
 
 module.exports = async () => {
   await request('http://localhost:3001/users/logout', {

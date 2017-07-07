@@ -72,9 +72,15 @@ const questionToUpdate = {
 
 const pathToAttaches = './server/tests/integration/data/attachments/';
 
+const answer = {
+  rating: 0,
+  text: 'To be or not to be'
+};
+
 module.exports = {
   questionsToCreate,
   questionToCreate,
   pathToAttaches,
-  questionToUpdate
+  questionToUpdate,
+  answer
 };
