@@ -24,9 +24,9 @@ class QuestionController {
   createQuestion(ctx) {
     const question = ctx.request.body;
     const files = ctx.req.files || [];
-    const user = ctx.state.user;
+    const userId = ctx.state.user._id;
 
-    return this.questionService.createQuestion(question, files, user);
+    return this.questionService.createQuestion(question, files, userId);
   }
 
   updateQuestion(ctx) {
@@ -61,9 +61,9 @@ class QuestionController {
   createAnswer(ctx) {
     const questionId = ctx.params.questionId;
     const answer = ctx.request.body.fields;
-    const user = ctx.state.user;
+    const userId = ctx.state.user._id;
 
-    return this.questionService.createAnswer(questionId, answer, user);
+    return this.questionService.createAnswer(questionId, answer, userId);
   }
 
   updateAnswer(ctx) {

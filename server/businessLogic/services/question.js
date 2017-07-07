@@ -19,12 +19,12 @@ class QuestionService {
     return this.questionRepository.getByTags(tagsArray);
   }
 
-  createQuestion(question, attachments, user) {
+  createQuestion(question, attachments, userId) {
     const { mapper, questionRepository } = this;
     const filePaths = attachments.map(file => file.path);
     const questionModel = mapper(question, 'mapCreateQuestion');
 
-    questionModel.author = user._id;
+    questionModel.author = userId;
     questionModel.attachments = filePaths;
 
     return questionRepository.create(questionModel);
@@ -61,11 +61,11 @@ class QuestionService {
     }
   }
 
-  createAnswer(questionId, answer, user) {
+  createAnswer(questionId, answer, userId) {
     const { mapper, questionRepository } = this;
     const answerModel = mapper(answer, 'mapCreateAnswer');
 
-    answerModel.author = user._id;
+    answerModel.author = userId;
     return questionRepository.addAnswer(questionId, answerModel);
   }
 
