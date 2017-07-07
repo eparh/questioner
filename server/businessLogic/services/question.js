@@ -71,7 +71,7 @@ class QuestionService {
 
   async updateAnswer(questionId, answer, user) {
     const { questionRepository, _hasPermission } = this;
-    const answerInDB = (await questionRepository.getAnswerById(questionId, answer._id) || [])[0];
+    const answerInDB = await questionRepository.getAnswerById(questionId, answer._id);
 
     if (_hasPermission(user, answerInDB)) {
       return questionRepository.updateAnswer(questionId, answer);
@@ -80,7 +80,7 @@ class QuestionService {
 
   async deleteAnswer(questionId, answerId, user) {
     const { questionRepository, _hasPermission } = this;
-    const answerInDB = (await questionRepository.getAnswerById(questionId, answerId) || [])[0];
+    const answerInDB = await questionRepository.getAnswerById(questionId, answerId);
 
     if (_hasPermission(user, answerInDB)) {
       return this.questionRepository.removeAnswer(questionId, answerId);

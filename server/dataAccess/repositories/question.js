@@ -39,14 +39,14 @@ class QuestionRepository extends BaseRepository {
   }
 
   getAnswerById(questionId, answerId) {
-    return this.Model.find({
+    return Object.assign(this.Model.find({
       _id: questionId,
       'answers._id': answerId
     },
     {
       'answers.$': 1,
       _id: 0
-    });
+    }), [])[0];
   }
 
   updateAnswer(questionId, answer) {

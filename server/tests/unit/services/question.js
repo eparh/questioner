@@ -260,7 +260,7 @@ describe('Conference Service', () => {
         }),
         createStub({
           methodName: 'getAnswerById',
-          returnValue: [answer]
+          returnValue: answer
         })
       );
 
@@ -299,7 +299,7 @@ describe('Conference Service', () => {
         }),
         createStub({
           methodName: 'getAnswerById',
-          returnValue: [answer]
+          returnValue: answer
         })
       );
 
