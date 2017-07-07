@@ -6,6 +6,9 @@
     "precommit": "eslint ./server server.js",
     "prepush": "yarn run coverage"
   },
+  "engines": {
+    "node": "latest"
+  },
   "dependencies": {
     "awilix": "^2.4.0",
     "bcrypt": "^1.0.2",

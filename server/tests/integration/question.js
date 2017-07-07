@@ -75,7 +75,7 @@ describe('Question API Test', () => {
       questionId = resultQuestion._id;
     });
 
-    it('should get questions', async () => {
+    it('should get question', async () => {
       const response = await queryConstructor.sendRequest({
         method: 'get',
         url: `${routes.questions.url}/${questionId}`,
@@ -189,10 +189,6 @@ describe('Question API Test', () => {
           {
             name: 'description',
             value: questionToCreate.description
-          },
-          {
-            name: 'rating',
-            value: questionToCreate.rating
           }
         ],
         headers: {
@@ -221,30 +217,29 @@ describe('Question API Test', () => {
 
   });
 
-  describe.skip('[PUT] /questions/', () => {
+  describe('[PUT] /questions/', () => {
     const { questionToCreate, pathToAttaches } = testData;
 
     let resultQuestion;
-    let questionId;
 
     beforeEach(async () => {
       resultQuestion = await questionRepository.create(questionToCreate);
 
-      questionId = resultQuestion._id;
+      questionToCreate._id = resultQuestion._id;
     });
 
     it('should update question', async () => {
-      const response = await queryConstructor.sendRequest({
+      await queryConstructor.sendRequest({
         method: 'put',
-        url: `${routes.questions.url}/${questionId}`,
-        expect: statusCodes.success,
+        url: `${routes.questions.url}`,
+        expect: 204,
         body: questionToCreate,
         headers: {
           cookie: cookies
         }
       });
 
-      expect(response.body.description).to.equal(questionToCreate.description);
+      // expect(response.body.description).to.equal(questionToCreate.description);
     });
 
     it('should update question with attachments', async () => {
@@ -264,10 +259,6 @@ describe('Question API Test', () => {
           {
             name: 'description',
             value: questionToCreate.description
-          },
-          {
-            name: 'rating',
-            value: questionToCreate.rating
           }
         ],
         headers: {
@@ -287,7 +278,7 @@ describe('Question API Test', () => {
       });
     });
 
-    after(() => {
+    afterEach(() => {
       return Promise.all([
         clean(),
         filesHelper.cleanTestImagesDirectory()

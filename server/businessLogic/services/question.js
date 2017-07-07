@@ -37,9 +37,9 @@ class QuestionService {
 
     questionModel.attachments = filePaths;
 
-    const questionInDB = await questionRepository.findById(questionModel._id);
+    const { author } = await questionRepository.findById(questionModel._id);
 
-    if (_hasPermission(user, questionInDB)) {
+    if (_hasPermission(user, author)) {
       return questionRepository.updateById(questionModel);
     }
   }
@@ -54,9 +54,9 @@ class QuestionService {
 
   async deleteQuestion(id, user) {
     const { questionRepository, _hasPermission } = this;
-    const questionInDB = await questionRepository.findById(id);
+    const { author } = await questionRepository.findById(id);
 
-    if (_hasPermission(user, questionInDB)) {
+    if (_hasPermission(user, author)) {
       return questionRepository.removeById(id);
     }
   }
@@ -71,18 +71,18 @@ class QuestionService {
 
   async updateAnswer(questionId, answer, user) {
     const { questionRepository, _hasPermission } = this;
-    const answerInDB = await questionRepository.getAnswerById(questionId, answer._id);
+    const { author } = await questionRepository.getAnswerById(questionId, answer._id);
 
-    if (_hasPermission(user, answerInDB)) {
+    if (_hasPermission(user, author)) {
       return questionRepository.updateAnswer(questionId, answer);
     }
   }
 
   async deleteAnswer(questionId, answerId, user) {
     const { questionRepository, _hasPermission } = this;
-    const answerInDB = await questionRepository.getAnswerById(questionId, answerId);
+    const { author } = await questionRepository.getAnswerById(questionId, answerId);
 
-    if (_hasPermission(user, answerInDB)) {
+    if (_hasPermission(user, author)) {
       return this.questionRepository.removeAnswer(questionId, answerId);
     }
   }
@@ -95,8 +95,8 @@ class QuestionService {
     return this.questionRepository.voteUpAnswer(questionId, answerId, voterId);
   }
 
-  _hasPermission(user, record) {
-    return user.role === 'admin' || user._id.equals(record.author);
+  _hasPermission(user, author) {
+    return user.role === 'admin' || user._id.equals(author);
   }
 }
 
