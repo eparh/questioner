@@ -61,6 +61,16 @@ const questionToCreate = {
   ]
 };
 
+const question = {
+  author: new mongoose.Types.ObjectId(),
+  title: 'What is love 5',
+  description: 'No more',
+  tags: [
+    new mongoose.Types.ObjectId(),
+    new mongoose.Types.ObjectId()
+  ]
+};
+
 const questionToUpdate = {
   title: 'Ring-ring',
   description: 'No more',
@@ -77,10 +87,14 @@ const answer = {
   text: 'To be or not to be'
 };
 
+const fakeId = new mongoose.Types.ObjectId();
+
 module.exports = {
   questionsToCreate,
   questionToCreate,
   pathToAttaches,
   questionToUpdate,
-  answer
+  answer,
+  fakeId,
+  question
 };

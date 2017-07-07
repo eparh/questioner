@@ -23,11 +23,14 @@ describe('Question API Test', () => {
   let app;
   let cookies;
   let queryConstructor;
+  let userId;
 
   before(async () => {
     app = await hooks.before();
     queryConstructor = initQueryConstructor(app);
-    await userService.register(testUser);
+    const user = await userService.register(testUser);
+
+    userId = user;
     cookies = await login();
   });
 
@@ -218,17 +221,36 @@ describe('Question API Test', () => {
   });
 
   describe('[PUT] /questions/', () => {
-    const { questionToCreate, pathToAttaches } = testData;
+    const { questionToCreate, pathToAttaches, fakeId, question } = testData;
 
     let resultQuestion;
 
     beforeEach(async () => {
+      questionToCreate.author = userId;
       resultQuestion = await questionRepository.create(questionToCreate);
-
       questionToCreate._id = resultQuestion._id;
+
+      resultQuestion = await questionRepository.create(question);
+      question._id = resultQuestion._id;
     });
 
     it('should update question', async () => {
+      const response = await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}`,
+        expect: 200,
+        body: questionToCreate,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(1);
+    });
+
+    it('shouldn\'t update because question doensn\'t exist', async () => {
+      questionToCreate._id = fakeId;
+
       await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}`,
@@ -239,7 +261,24 @@ describe('Question API Test', () => {
         }
       });
 
-      // expect(response.body.description).to.equal(questionToCreate.description);
+    });
+
+    it.only('shouldn\'t update because author doensn\'t math', async () => {
+      before(async () => {
+        resultQuestion = await questionRepository.create(question);
+        question._id = resultQuestion._id;
+      });
+
+      await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}`,
+        expect: 204,
+        body: question,
+        headers: {
+          cookie: cookies
+        }
+      });
+
     });
 
     it('should update question with attachments', async () => {
