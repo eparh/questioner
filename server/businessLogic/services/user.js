@@ -11,7 +11,7 @@ class UserService {
     const user = await this.findByEmail(formData.email);
 
     if (!user) {
-      formData.password = bcryptService.generateHash(formData.password);
+      formData.password = await bcryptService.generateHash(formData.password);
       return userRepository.create(formData);
     }
   }

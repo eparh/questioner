@@ -17,7 +17,7 @@ async (username, password, done) => {
       });
     }
 
-    if (!userService.validatePassword(password, user.password)) {
+    if (! await userService.validatePassword(password, user.password)) {
       return done(null, false, {
         message: 'Invalid password'
       });

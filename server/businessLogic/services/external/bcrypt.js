@@ -1,6 +1,6 @@
 'use strict';
 
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt');
 
 class BcryptService {
   constructor() {
@@ -8,17 +8,11 @@ class BcryptService {
   }
 
   generateHash(password) {
-    const salt = this._getSalt();
-
-    return bcrypt.hashSync(password, salt);
+    return bcrypt.hash(password, this.rounds);
   }
 
   validatePassword(password, passwordInDB) {
-    return bcrypt.compareSync(password, passwordInDB);
-  }
-
-  _getSalt() {
-    return bcrypt.hashSync(this.rounds);
+    return bcrypt.compare(password, passwordInDB);
   }
 }
 

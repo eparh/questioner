@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "awilix": "^2.4.0",
-    "bcrypt-nodejs": "^0.0.3",
+    "bcrypt": "^1.0.2",
     "complexity-report": "^2.0.0-alpha",
     "config": "^1.26.1",
     "fs-extra": "^3.0.1",
