@@ -263,7 +263,7 @@ describe('Question API Test', () => {
 
     });
 
-    it.only('shouldn\'t update because author doensn\'t math', async () => {
+    it('shouldn\'t update because author doensn\'t math', async () => {
       before(async () => {
         resultQuestion = await questionRepository.create(question);
         question._id = resultQuestion._id;
@@ -313,6 +313,116 @@ describe('Question API Test', () => {
       await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}`,
+        expect: 302
+      });
+    });
+
+    afterEach(() => {
+      return Promise.all([
+        clean(),
+        filesHelper.cleanTestImagesDirectory()
+      ]);
+    });
+
+  });
+
+  describe('[PUT] /questions/:questionId/up', () => {
+    const { fakeId, question } = testData;
+
+    let resultQuestion;
+    let questionId;
+
+    beforeEach(async () => {
+      resultQuestion = await questionRepository.create(question);
+      questionId = resultQuestion._id;
+    });
+
+    it('should vote up question', async () => {
+      const response = await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${questionId}/up`,
+        expect: 200,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(1);
+    });
+
+    it('shouldn\'t vote because question doensn\'t exist', async () => {
+
+      const response = await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${fakeId}/up`,
+        expect: 200,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(0);
+    });
+
+    it('should not update question', async () => {
+      await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${questionId}/up`,
+        expect: 302
+      });
+    });
+
+    afterEach(() => {
+      return Promise.all([
+        clean(),
+        filesHelper.cleanTestImagesDirectory()
+      ]);
+    });
+
+  });
+
+  describe('[PUT] /questions/:questionId/down', () => {
+    const { fakeId, question } = testData;
+
+    let resultQuestion;
+    let questionId;
+
+    beforeEach(async () => {
+      resultQuestion = await questionRepository.create(question);
+      questionId = resultQuestion._id;
+    });
+
+    it('should vote down question', async () => {
+      const response = await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${questionId}/down`,
+        expect: 200,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(1);
+    });
+
+    it('shouldn\'t vote because question doensn\'t exist', async () => {
+
+      const response = await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${fakeId}/down`,
+        expect: 200,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(0);
+    });
+
+    it('should not update question', async () => {
+      await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${questionId}/down`,
         expect: 302
       });
     });
