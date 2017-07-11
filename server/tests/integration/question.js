@@ -233,7 +233,6 @@ describe('Question API Test', () => {
       url: `${routes.questions.url}`
     };
 
-
     let resultQuestion;
 
     before(async () => {
@@ -453,12 +452,12 @@ describe('Question API Test', () => {
       text: 'should not delete question because not authorized'
     };
 
-    let resultQuestion;
     let questionId;
 
     beforeEach(async () => {
       question.author = userId;
-      resultQuestion = await questionRepository.create(question);
+      const resultQuestion = await questionRepository.create(question);
+
       questionId = resultQuestion._id;
       Object.assign(errorAuthData, {
         queryConstructor,
@@ -490,6 +489,333 @@ describe('Question API Test', () => {
           cookie: cookies
         }
       });
+    });
+
+    afterEach(() => {
+      return Promise.all([
+        clean(),
+        filesHelper.cleanTestImagesDirectory()
+      ]);
+    });
+
+  });
+
+  describe('[POST] /:questionId/answers', () => {
+    const { questionToCreate, answer } = testData;
+
+    let resultQuestion;
+    let questionId;
+
+    const errorAuthData = {
+      method: 'post',
+      text: 'should not create answer because not authorized'
+    };
+
+    before(async () => {
+      resultQuestion = await questionRepository.create(questionToCreate);
+      questionId = resultQuestion._id;
+      Object.assign(errorAuthData, {
+        queryConstructor,
+        url: `${routes.questions.url}/${questionId}/answers`
+      });
+    });
+
+    errorAuthTest(errorAuthData);
+
+    it('should create answer', async () => {
+      const response = await queryConstructor.sendRequest({
+        method: 'post',
+        url: `${routes.questions.url}/${questionId}/answers`,
+        expect: statusCodes.success,
+        body: answer,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(1);
+    });
+
+    after(() => {
+      return clean();
+    });
+
+  });
+
+  describe('[PUT] /:questionId/answers', () => {
+    const { questionToCreate, answer } = testData;
+
+    let resultQuestion;
+    let questionId;
+    const answerWithoutAuthor = {};
+
+    Object.assign(answerWithoutAuthor, answer);
+
+    const errorAuthData = {
+      method: 'put',
+      text: 'should not update answer because not authorized'
+    };
+
+    before(async () => {
+      resultQuestion = await questionRepository.create(questionToCreate);
+      questionId = resultQuestion._id;
+      answer.author = userId;
+
+      await questionRepository.addAnswer(questionId, answer);
+      await questionRepository.addAnswer(questionId, answerWithoutAuthor);
+
+      const { answers } = await questionRepository.getById(questionId);
+
+      answer._id = answers[0]._id;
+      answerWithoutAuthor._id = answers[1]._id;
+      Object.assign(errorAuthData, {
+        queryConstructor,
+        url: `${routes.questions.url}/${questionId}/answers`
+      });
+    });
+
+    errorAuthTest(errorAuthData);
+
+    it('should update answer', async () => {
+      const response = await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${questionId}/answers`,
+        expect: statusCodes.success,
+        body: answer,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(1);
+    });
+
+    it('shouldn\'t update because author doensn\'t math', async () => {
+      await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${questionId}/answers`,
+        expect: 204,
+        body: answerWithoutAuthor,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+    });
+
+    after(() => clean());
+  });
+
+  describe('[DELETE] /:questionId/answers/:answerId', () => {
+    const { questionToCreate, answer, fakeId } = testData;
+
+    let resultQuestion;
+    let questionId;
+    const answerWithoutAuthor = {};
+
+    Object.assign(answerWithoutAuthor, answer);
+
+    const errorAuthData = {
+      method: 'delete',
+      text: 'should not delete answer because not authorized'
+    };
+
+    before(async () => {
+      resultQuestion = await questionRepository.create(questionToCreate);
+      questionId = resultQuestion._id;
+      answer.author = userId;
+
+      await questionRepository.addAnswer(questionId, answer);
+      await questionRepository.addAnswer(questionId, answerWithoutAuthor);
+
+      const { answers } = await questionRepository.getById(questionId);
+
+      answer._id = answers[0]._id;
+      answerWithoutAuthor._id = answers[1]._id;
+      Object.assign(errorAuthData, {
+        queryConstructor,
+        url: `${routes.questions.url}/${questionId}/answers/${answer._id}`
+      });
+    });
+
+    errorAuthTest(errorAuthData);
+
+    it('should delete answer', async () => {
+      const response = await queryConstructor.sendRequest({
+        method: 'delete',
+        url: `${routes.questions.url}/${questionId}/answers/${answer._id}`,
+        expect: statusCodes.success,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(1);
+    });
+
+    it('shouldn\'t delete because author doensn\'t math', async () => {
+      await queryConstructor.sendRequest({
+        method: 'delete',
+        url: `${routes.questions.url}/${questionId}/answers/${answerWithoutAuthor._id}`,
+        expect: 204,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      it('shouldn\'t delete because answer doensn\'t exist', async () => {
+        await queryConstructor.sendRequest({
+          method: 'delete',
+          url: `${routes.questions.url}/answers/${fakeId}`,
+          expect: 204,
+          headers: {
+            cookie: cookies
+          }
+        });
+      });
+
+    });
+
+    after(() => clean());
+  });
+
+  describe('[PUT] /:questionId/answers/:answerId/vote/up', () => {
+    const { fakeId, question, answer } = testData;
+    const errorAuthData = {
+      method: 'put',
+      text: 'should not vote up answer because not authorized'
+    };
+    let resultQuestion;
+    let questionId;
+
+    beforeEach(async () => {
+      resultQuestion = await questionRepository.create(question);
+      questionId = resultQuestion._id;
+
+      await questionRepository.addAnswer(questionId, answer);
+      const { answers } = await questionRepository.getById(questionId);
+
+      answer._id = answers[0]._id;
+
+      Object.assign(errorAuthData, {
+        queryConstructor,
+        url: `${routes.questions.url}/${questionId}/answers/${answer._id}/vote/up`
+      });
+    });
+
+    errorAuthTest(errorAuthData);
+
+    it('should vote up question', async () => {
+      const response = await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${questionId}/answers/${answer._id}/vote/up`,
+        expect: 200,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(1);
+    });
+
+    it('shouldn\'t vote because question doensn\'t exist', async () => {
+      const response = await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${fakeId}/answers/${answer._id}/vote/up`,
+        expect: 200,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(0);
+    });
+
+    it('shouldn\'t vote because answer doensn\'t exist', async () => {
+      const response = await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${questionId}/answers/${fakeId}/vote/up`,
+        expect: 200,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(0);
+    });
+
+    afterEach(() => {
+      return Promise.all([
+        clean(),
+        filesHelper.cleanTestImagesDirectory()
+      ]);
+    });
+
+  });
+
+  describe('[PUT] /:questionId/answers/:answerId/vote/down', () => {
+    const { fakeId, question, answer } = testData;
+    const errorAuthData = {
+      method: 'put',
+      text: 'should not vote down answer because not authorized'
+    };
+    let resultQuestion;
+    let questionId;
+
+    beforeEach(async () => {
+      resultQuestion = await questionRepository.create(question);
+      questionId = resultQuestion._id;
+
+      await questionRepository.addAnswer(questionId, answer);
+      const { answers } = await questionRepository.getById(questionId);
+
+      answer._id = answers[0]._id;
+
+      Object.assign(errorAuthData, {
+        queryConstructor,
+        url: `${routes.questions.url}/${questionId}/answers/${answer._id}/vote/down`
+      });
+    });
+
+    errorAuthTest(errorAuthData);
+
+    it('should vote up question', async () => {
+      const response = await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${questionId}/answers/${answer._id}/vote/down`,
+        expect: 200,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(1);
+    });
+
+    it('shouldn\'t vote because question doensn\'t exist', async () => {
+      const response = await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${fakeId}/answers/${answer._id}/vote/down`,
+        expect: 200,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(0);
+    });
+
+    it('shouldn\'t vote because answer doensn\'t exist', async () => {
+      const response = await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${questionId}/answers/${fakeId}/vote/down`,
+        expect: 200,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.nModified).to.equal(0);
     });
 
     afterEach(() => {

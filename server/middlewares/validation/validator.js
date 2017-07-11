@@ -1,12 +1,14 @@
 'use strict';
 
+const statusCodes = require('../../constants');
+
 module.exports = (validateFunction) => {
   return (ctx, next) => {
-    const errors = validateFunction(ctx);
+    validateFunction(ctx);
 
-    if (errors) {
-      ctx.body = errors;
-      return;
+    if (ctx.errors) {
+      ctx.status = statusCodes.validationError;
+      ctx.body = ctx.errors;
     }
     return next();
   };

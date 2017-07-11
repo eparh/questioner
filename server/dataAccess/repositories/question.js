@@ -38,15 +38,17 @@ class QuestionRepository extends BaseRepository {
     );
   }
 
-  getAnswerById(questionId, answerId) {
-    return Object.assign(this.Model.find({
+  async getAnswerById(questionId, answerId) {
+    const model = await this.Model.find({
       _id: questionId,
       'answers._id': answerId
     },
     {
       'answers.$': 1,
       _id: 0
-    }), [])[0];
+    });
+
+    return Object.assign(this.toJSON(model), [])[0].answers[0];
   }
 
   updateAnswer(questionId, answer) {

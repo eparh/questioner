@@ -60,7 +60,7 @@ class QuestionController {
 
   createAnswer(ctx) {
     const questionId = ctx.params.questionId;
-    const answer = ctx.request.body.fields;
+    const answer = ctx.request.body;
     const userId = ctx.state.user._id;
 
     return this.questionService.createAnswer(questionId, answer, userId);
@@ -68,7 +68,7 @@ class QuestionController {
 
   updateAnswer(ctx) {
     const questionId = ctx.params.questionId;
-    const answer = ctx.request.body.fields;
+    const answer = ctx.request.body;
     const user = ctx.state.user;
 
     return this.questionService.updateAnswer(questionId, answer, user);
