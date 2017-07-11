@@ -1,11 +1,18 @@
 'use strict';
 
-const { success } = require('../../constants/').STATUS_CODES;
+const { forbidden, unauthorized } = require('../../constants/').STATUS_CODES;
 
-module.exports = () => {
-  return (ctx, next) => {
-    const user = ctx.state.user;
+module.exports = (ctx, next) => {
+  const user = ctx.state.user;
 
-    return user.role === 'admin' ? next() : ctx.res(success);
-  };
+  if (!user) {
+    ctx.status = unauthorized;
+    return;
+  }
+
+  if (user.role === 'admin') {
+    return next();
+  }
+
+  ctx.status = forbidden;
 };

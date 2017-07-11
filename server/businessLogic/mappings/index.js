@@ -1,11 +1,14 @@
 'use strict';
 
-const question = require('./question');
-const answer = require('./answer');
+const { mapCreateQuestion, mapUpdateQuestion } = require('./question');
+const { mapCreateAnswer, mapUpdateAnswer } = require('./answer');
+const { mapCreateTag, mapUpdateTag } = require('./tag');
 
 module.exports = {
-  mapCreateQuestion: question.mapCreateQuestion,
-  mapUpdateQuestion: question.mapUpdateQuestion,
-  mapCreateAnswer: answer.mapCreateAnswer,
-  mapUpdateAnswer: answer.mapUpdateAnswer
+  mapCreateQuestion,
+  mapUpdateQuestion,
+  mapCreateAnswer,
+  mapUpdateAnswer,
+  mapCreateTag,
+  mapUpdateTag
 };

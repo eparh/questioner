@@ -5,6 +5,7 @@ const isAdmin = require('../../middlewares/security/isAdmin');
 const validateCreateTagInfo = require('../validators/tag/validateCreateTagInfo');
 const validateUpdateTagInfo = require('../validators/tag/validateUpdateTagInfo');
 const validateDeleteTagInfo = require('../validators/tag/validateDeleteTagInfo');
+const passport = require('passport');
 
 class TagRoute extends BaseRoute {
   constructor({ tagController }) {
@@ -15,12 +16,10 @@ class TagRoute extends BaseRoute {
     const self = this;
     const { validator } = self;
 
-    router.use(isAdmin());
-
-    router.get('/', self.registerHandler('getAll'));
-    router.post('/', validator(validateCreateTagInfo), self.registerHandler('create'));
-    router.put('/', validator(validateUpdateTagInfo), self.registerHandler('update'));
-    router.delete('/:id', validator(validateDeleteTagInfo), self.registerHandler('delete'));
+    router.get('/', passport.authenticationMiddleware(), self.registerHandler('getAll'));
+    router.post('/', isAdmin, validator(validateCreateTagInfo), self.registerHandler('create'));
+    router.put('/', isAdmin, validator(validateUpdateTagInfo), self.registerHandler('update'));
+    router.delete('/:id', isAdmin, validator(validateDeleteTagInfo), self.registerHandler('delete'));
   }
 
   getBaseUrl() {

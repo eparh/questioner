@@ -9,5 +9,4 @@ const tagMaxLength = config.get('validation.tagMaxLength');
 module.exports = (ctx) => {
   ctx.checkBody('_id').notEmpty().len(idLength, idLength, idMessage);
   ctx.checkBody('name').notEmpty().len(tagMinLength, tagMaxLength);
-  return ctx.errors;
 };

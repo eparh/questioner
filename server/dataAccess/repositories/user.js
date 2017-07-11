@@ -6,7 +6,6 @@ class UserRepository extends BaseRepository {
   constructor({ dbContext }) {
     super(dbContext, 'User');
   }
-
 }
 
 module.exports = UserRepository;

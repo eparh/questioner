@@ -6,5 +6,4 @@ const idMessage = config.get('validation.messages.idLength');
 
 module.exports = (ctx) => {
   ctx.checkParams('id').notEmpty().len(idLength, idLength, idMessage);
-  return ctx.errors;
 };

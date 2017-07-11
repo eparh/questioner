@@ -6,5 +6,6 @@ module.exports = {
   success: 200,
   emptyResponse: 204,
   unauthorized: 401,
-  notFound: 404
+  notFound: 404,
+  forbidden: 403
 };

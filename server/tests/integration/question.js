@@ -8,7 +8,7 @@ const initQueryConstructor = require('../helpers/utils/queryConstructor');
 const queryString = require('query-string');
 const filesHelper = require('../helpers/utils/filesHelper');
 const { errorAuthTest } = require('../helpers/testTemplates');
-const statusCodes = require('../../constants').STATUS_CODES;
+const { success, emptyResponse } = require('../../constants').STATUS_CODES;
 
 const { questionRepository, userService } = require('../../helpers/iocContainer').getAllDependencies();
 const { clearCollections } = require('../helpers/database');
@@ -24,12 +24,12 @@ describe('Question API Test', () => {
   let app;
   let cookies;
   let queryConstructor;
-  let userId;
+  let user;
 
   before(async () => {
     app = await hooks.before();
     queryConstructor = initQueryConstructor(app);
-    userId = await userService.register(testUser);
+    user = await userService.register(testUser);
     cookies = await login();
   });
 
@@ -55,7 +55,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'get',
         url: `${routes.questions.url}`,
-        expect: statusCodes.success,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -92,7 +92,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'get',
         url: `${routes.questions.url}/${questionId}`,
-        expect: statusCodes.success,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -131,7 +131,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'get',
         url: `${routes.questions.url}/tags?${tagQuery}`,
-        expect: statusCodes.success,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -148,7 +148,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'get',
         url: `${routes.questions.url}/tags?${tagQuery}`,
-        expect: statusCodes.success,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -178,7 +178,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'post',
         url: `${routes.questions.url}`,
-        expect: statusCodes.success,
+        expect: success,
         body: questionToCreate,
         headers: {
           cookie: cookies
@@ -196,7 +196,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'post',
         url: `${routes.questions.url}`,
-        expect: statusCodes.success,
+        expect: success,
         fields: [
           {
             name: 'title',
@@ -236,7 +236,7 @@ describe('Question API Test', () => {
     let resultQuestion;
 
     before(async () => {
-      questionToCreate.author = userId;
+      questionToCreate.author = user;
       resultQuestion = await questionRepository.create(questionToCreate);
       questionToCreate._id = resultQuestion._id;
 
@@ -252,7 +252,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}`,
-        expect: 200,
+        expect: success,
         body: questionToCreate,
         headers: {
           cookie: cookies
@@ -268,7 +268,7 @@ describe('Question API Test', () => {
       await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}`,
-        expect: 204,
+        expect: emptyResponse,
         body: questionToCreate,
         headers: {
           cookie: cookies
@@ -286,7 +286,7 @@ describe('Question API Test', () => {
       await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}`,
-        expect: 204,
+        expect: emptyResponse,
         body: question,
         headers: {
           cookie: cookies
@@ -303,7 +303,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'post',
         url: `${routes.questions.url}`,
-        expect: statusCodes.success,
+        expect: success,
         fields: [
           {
             name: 'title',
@@ -357,7 +357,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/up`,
-        expect: 200,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -371,7 +371,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${fakeId}/up`,
-        expect: 200,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -413,7 +413,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/down`,
-        expect: 200,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -427,7 +427,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${fakeId}/down`,
-        expect: 200,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -455,7 +455,7 @@ describe('Question API Test', () => {
     let questionId;
 
     beforeEach(async () => {
-      question.author = userId;
+      question.author = user;
       const resultQuestion = await questionRepository.create(question);
 
       questionId = resultQuestion._id;
@@ -471,7 +471,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'delete',
         url: `${routes.questions.url}/${questionId}`,
-        expect: 200,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -484,7 +484,7 @@ describe('Question API Test', () => {
       await queryConstructor.sendRequest({
         method: 'delete',
         url: `${routes.questions.url}/${fakeId}`,
-        expect: 204,
+        expect: emptyResponse,
         headers: {
           cookie: cookies
         }
@@ -526,7 +526,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'post',
         url: `${routes.questions.url}/${questionId}/answers`,
-        expect: statusCodes.success,
+        expect: success,
         body: answer,
         headers: {
           cookie: cookies
@@ -536,10 +536,7 @@ describe('Question API Test', () => {
       expect(response.body.nModified).to.equal(1);
     });
 
-    after(() => {
-      return clean();
-    });
-
+    after(clean);
   });
 
   describe('[PUT] /:questionId/answers', () => {
@@ -559,7 +556,7 @@ describe('Question API Test', () => {
     before(async () => {
       resultQuestion = await questionRepository.create(questionToCreate);
       questionId = resultQuestion._id;
-      answer.author = userId;
+      answer.author = user;
 
       await questionRepository.addAnswer(questionId, answer);
       await questionRepository.addAnswer(questionId, answerWithoutAuthor);
@@ -580,7 +577,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/answers`,
-        expect: statusCodes.success,
+        expect: success,
         body: answer,
         headers: {
           cookie: cookies
@@ -594,7 +591,7 @@ describe('Question API Test', () => {
       await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/answers`,
-        expect: 204,
+        expect: emptyResponse,
         body: answerWithoutAuthor,
         headers: {
           cookie: cookies
@@ -603,7 +600,7 @@ describe('Question API Test', () => {
 
     });
 
-    after(() => clean());
+    after(clean);
   });
 
   describe('[DELETE] /:questionId/answers/:answerId', () => {
@@ -623,7 +620,7 @@ describe('Question API Test', () => {
     before(async () => {
       resultQuestion = await questionRepository.create(questionToCreate);
       questionId = resultQuestion._id;
-      answer.author = userId;
+      answer.author = user;
 
       await questionRepository.addAnswer(questionId, answer);
       await questionRepository.addAnswer(questionId, answerWithoutAuthor);
@@ -644,7 +641,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'delete',
         url: `${routes.questions.url}/${questionId}/answers/${answer._id}`,
-        expect: statusCodes.success,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -657,7 +654,7 @@ describe('Question API Test', () => {
       await queryConstructor.sendRequest({
         method: 'delete',
         url: `${routes.questions.url}/${questionId}/answers/${answerWithoutAuthor._id}`,
-        expect: 204,
+        expect: emptyResponse,
         headers: {
           cookie: cookies
         }
@@ -667,7 +664,7 @@ describe('Question API Test', () => {
         await queryConstructor.sendRequest({
           method: 'delete',
           url: `${routes.questions.url}/answers/${fakeId}`,
-          expect: 204,
+          expect: emptyResponse,
           headers: {
             cookie: cookies
           }
@@ -676,7 +673,7 @@ describe('Question API Test', () => {
 
     });
 
-    after(() => clean());
+    after(clean);
   });
 
   describe('[PUT] /:questionId/answers/:answerId/vote/up', () => {
@@ -709,7 +706,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/answers/${answer._id}/vote/up`,
-        expect: 200,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -722,7 +719,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${fakeId}/answers/${answer._id}/vote/up`,
-        expect: 200,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -735,7 +732,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/answers/${fakeId}/vote/up`,
-        expect: 200,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -783,7 +780,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/answers/${answer._id}/vote/down`,
-        expect: 200,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -796,7 +793,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${fakeId}/answers/${answer._id}/vote/down`,
-        expect: 200,
+        expect: success,
         headers: {
           cookie: cookies
         }
@@ -809,7 +806,7 @@ describe('Question API Test', () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/answers/${fakeId}/vote/down`,
-        expect: 200,
+        expect: success,
         headers: {
           cookie: cookies
         }

@@ -5,6 +5,13 @@ const testUser = {
   password: 'password'
 };
 
+const testAdmin = {
+  email: 'testAdmin@gmail.com',
+  password: 'password',
+  role: 'admin'
+};
+
 module.exports = {
-  testUser
+  testUser,
+  testAdmin
 };

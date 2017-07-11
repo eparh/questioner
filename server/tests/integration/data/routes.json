@@ -3,7 +3,7 @@
     "url": "/questions"
   },
   "tags": {
-    "user": "/tags"
+    "url": "/tags"
   },
   "users": {
     "url": "/users"
