@@ -1,7 +1,10 @@
 {
 	"server": {
       "uploadDir": "uploads",
-      "port": 3001
+      "port": 3001,
+      "logger" : {
+        "transports" : []
+      }
 	},
   "database": {
     "uri": "mongodb://localhost/base_test",

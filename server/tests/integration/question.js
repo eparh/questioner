@@ -7,6 +7,7 @@ const login = require('../helpers/hooks/login');
 const initQueryConstructor = require('../helpers/utils/queryConstructor');
 const queryString = require('query-string');
 const filesHelper = require('../helpers/utils/filesHelper');
+const { errorAuthTest } = require('../helpers/testTemplates');
 const statusCodes = require('../../constants').STATUS_CODES;
 
 const { questionRepository, userService } = require('../../helpers/iocContainer').getAllDependencies();
@@ -28,20 +29,27 @@ describe('Question API Test', () => {
   before(async () => {
     app = await hooks.before();
     queryConstructor = initQueryConstructor(app);
-    const user = await userService.register(testUser);
-
-    userId = user;
+    userId = await userService.register(testUser);
     cookies = await login();
   });
 
   describe('[GET] /questions/', () => {
     const { questionsToCreate } = testData;
+    const errorAuthData = {
+      method: 'get',
+      text: 'should not get questions because not authorized',
+      url: `${routes.questions.url}`
+    };
 
-    beforeEach(async () => {
+    before(async () => {
       const promises = questionsToCreate.map(question => questionRepository.create(question));
 
+      errorAuthData.queryConstructor = queryConstructor;
       await Promise.all(promises);
     });
+
+
+    errorAuthTest(errorAuthData);
 
     it('should get questions', async () => {
       const response = await queryConstructor.sendRequest({
@@ -53,30 +61,32 @@ describe('Question API Test', () => {
         }
       });
 
-      expect(response.body.length).to.eql(questionsToCreate.length);
+      expect(response.body.length).to.equal(questionsToCreate.length);
     });
 
-    it('should not get questions', async () => {
-      await queryConstructor.sendRequest({
-        method: 'get',
-        url: `${routes.questions.url}`,
-        expect: 302
-      });
-    });
-
-    afterEach(clean);
+    after(clean);
   });
 
   describe('[GET] /questions/:id', () => {
     const { questionToCreate } = testData;
     let questionId;
     let resultQuestion;
+    const errorAuthData = {
+      method: 'get',
+      text: 'should not get question by Id because not authorized'
+    };
 
-    beforeEach(async () => {
+    before(async () => {
       resultQuestion = await questionRepository.create(questionToCreate);
-
+      errorAuthData.queryConstructor = queryConstructor;
       questionId = resultQuestion._id;
+      Object.assign(errorAuthData, {
+        queryConstructor,
+        url: `${routes.questions.url}/${questionId}`
+      });
     });
+
+    errorAuthTest(errorAuthData);
 
     it('should get question', async () => {
       const response = await queryConstructor.sendRequest({
@@ -91,27 +101,27 @@ describe('Question API Test', () => {
       expect(response.body).to.have.property('description', resultQuestion.description);
     });
 
-    it('should not get question', async () => {
-      await queryConstructor.sendRequest({
-        method: 'get',
-        url: `${routes.questions.url}`,
-        expect: 302
-      });
-    });
-
-    afterEach(clean);
+    after(clean);
   });
 
   describe('[GET] /questions/tags', () => {
     const { questionsToCreate } = testData;
+    const errorAuthData = {
+      method: 'get',
+      text: 'should not get questions by tags because not authorized',
+      url: `${routes.questions.url}/tags`
+    };
     let tags;
 
-    beforeEach(async () => {
+    before(async () => {
       const promises = questionsToCreate.map(question => questionRepository.create(question));
 
+      errorAuthData.queryConstructor = queryConstructor;
       await Promise.all(promises);
       tags = questionsToCreate[0].tags.map(tag => tag.toString());
     });
+
+    errorAuthTest(errorAuthData);
 
     it('should get questions by tags', async () => {
       const tagQuery = queryString.stringify({
@@ -147,19 +157,22 @@ describe('Question API Test', () => {
       expect(response.body).to.be.an('array').that.has.length(1);
     });
 
-    it('should not get questions', async () => {
-      await queryConstructor.sendRequest({
-        method: 'get',
-        url: `${routes.questions.url}/tags`,
-        expect: 302
-      });
-    });
-
-    afterEach(clean);
+    after(clean);
   });
 
   describe('[POST] /questions/', () => {
     const { questionToCreate, pathToAttaches } = testData;
+    const errorAuthData = {
+      method: 'post',
+      text: 'should not create question because not authorized',
+      url: `${routes.questions.url}`
+    };
+
+    before(async () => {
+      errorAuthData.queryConstructor = queryConstructor;
+    });
+
+    errorAuthTest(errorAuthData);
 
     it('should create question', async () => {
       const response = await queryConstructor.sendRequest({
@@ -203,14 +216,6 @@ describe('Question API Test', () => {
       expect(response.body).to.has.property('description');
     });
 
-    it('should not create question', async () => {
-      await queryConstructor.sendRequest({
-        method: 'post',
-        url: `${routes.questions.url}`,
-        expect: 302
-      });
-    });
-
     after(() => {
       return Promise.all([
         clean(),
@@ -222,17 +227,27 @@ describe('Question API Test', () => {
 
   describe('[PUT] /questions/', () => {
     const { questionToCreate, pathToAttaches, fakeId, question } = testData;
+    const errorAuthData = {
+      method: 'put',
+      text: 'should not update question because not authorized',
+      url: `${routes.questions.url}`
+    };
+
 
     let resultQuestion;
 
-    beforeEach(async () => {
+    before(async () => {
       questionToCreate.author = userId;
       resultQuestion = await questionRepository.create(questionToCreate);
       questionToCreate._id = resultQuestion._id;
 
       resultQuestion = await questionRepository.create(question);
       question._id = resultQuestion._id;
+
+      errorAuthData.queryConstructor = queryConstructor;
     });
+
+    errorAuthTest(errorAuthData);
 
     it('should update question', async () => {
       const response = await queryConstructor.sendRequest({
@@ -309,15 +324,7 @@ describe('Question API Test', () => {
       expect(response.body).to.has.property('description');
     });
 
-    it('should not update question', async () => {
-      await queryConstructor.sendRequest({
-        method: 'put',
-        url: `${routes.questions.url}`,
-        expect: 302
-      });
-    });
-
-    afterEach(() => {
+    after(() => {
       return Promise.all([
         clean(),
         filesHelper.cleanTestImagesDirectory()
@@ -328,14 +335,24 @@ describe('Question API Test', () => {
 
   describe('[PUT] /questions/:questionId/up', () => {
     const { fakeId, question } = testData;
-
+    const errorAuthData = {
+      method: 'put',
+      text: 'should not vote up question because not authorized'
+    };
     let resultQuestion;
     let questionId;
 
     beforeEach(async () => {
       resultQuestion = await questionRepository.create(question);
       questionId = resultQuestion._id;
+
+      Object.assign(errorAuthData, {
+        queryConstructor,
+        url: `${routes.questions.url}/${questionId}/up`
+      });
     });
+
+    errorAuthTest(errorAuthData);
 
     it('should vote up question', async () => {
       const response = await queryConstructor.sendRequest({
@@ -364,14 +381,6 @@ describe('Question API Test', () => {
       expect(response.body.nModified).to.equal(0);
     });
 
-    it('should not update question', async () => {
-      await queryConstructor.sendRequest({
-        method: 'put',
-        url: `${routes.questions.url}/${questionId}/up`,
-        expect: 302
-      });
-    });
-
     afterEach(() => {
       return Promise.all([
         clean(),
@@ -383,14 +392,23 @@ describe('Question API Test', () => {
 
   describe('[PUT] /questions/:questionId/down', () => {
     const { fakeId, question } = testData;
-
+    const errorAuthData = {
+      method: 'put',
+      text: 'should not vote down question because not authorized'
+    };
     let resultQuestion;
     let questionId;
 
     beforeEach(async () => {
       resultQuestion = await questionRepository.create(question);
       questionId = resultQuestion._id;
+      Object.assign(errorAuthData, {
+        queryConstructor,
+        url: `${routes.questions.url}/${questionId}/down`
+      });
     });
+
+    errorAuthTest(errorAuthData);
 
     it('should vote down question', async () => {
       const response = await queryConstructor.sendRequest({
@@ -419,11 +437,58 @@ describe('Question API Test', () => {
       expect(response.body.nModified).to.equal(0);
     });
 
-    it('should not update question', async () => {
+    afterEach(() => {
+      return Promise.all([
+        clean(),
+        filesHelper.cleanTestImagesDirectory()
+      ]);
+    });
+
+  });
+
+  describe('[DELETE] /questions/:id', () => {
+    const { fakeId, question } = testData;
+    const errorAuthData = {
+      method: 'delete',
+      text: 'should not delete question because not authorized'
+    };
+
+    let resultQuestion;
+    let questionId;
+
+    beforeEach(async () => {
+      question.author = userId;
+      resultQuestion = await questionRepository.create(question);
+      questionId = resultQuestion._id;
+      Object.assign(errorAuthData, {
+        queryConstructor,
+        url: `${routes.questions.url}/${questionId}`
+      });
+    });
+
+    errorAuthTest(errorAuthData);
+
+    it('should delete question', async () => {
+      const response = await queryConstructor.sendRequest({
+        method: 'delete',
+        url: `${routes.questions.url}/${questionId}`,
+        expect: 200,
+        headers: {
+          cookie: cookies
+        }
+      });
+
+      expect(response.body.n).to.equal(1);
+    });
+
+    it('shouldn\'t delete because question doensn\'t exist', async () => {
       await queryConstructor.sendRequest({
-        method: 'put',
-        url: `${routes.questions.url}/${questionId}/down`,
-        expect: 302
+        method: 'delete',
+        url: `${routes.questions.url}/${fakeId}`,
+        expect: 204,
+        headers: {
+          cookie: cookies
+        }
       });
     });
 

@@ -5,7 +5,7 @@ function authenticationMiddleware () {
     if (ctx.isAuthenticated()) {
       return next();
     }
-    ctx.redirect('/users/login');
+    ctx.status = 401;
   };
 }
 
