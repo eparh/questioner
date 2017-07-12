@@ -141,7 +141,7 @@ describe('Conference Service', () => {
     it('should not update because of forbiddance', async () => {
       const question = await service.updateQuestion(expectedQuestion, [], testData.stranger);
 
-      return expect(question).to.be.to.be.undefined;
+      return expect(question).to.be.undefined;
     });
   });
 

@@ -7,7 +7,6 @@ const { userRepository } = require('../../../helpers/iocContainer').getAllDepend
 
 const { usersToCreate, userToCreate, userToUpdate } = require('./data/user');
 
-
 describe('Tag Repository', () => {
   const testOpts = {
     repository: userRepository,

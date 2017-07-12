@@ -2,15 +2,17 @@
 
 const mongoose = require('mongoose');
 
+const tags = [
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId()
+];
+
 const questionsToCreate = [
   {
     author: new mongoose.Types.ObjectId(),
     title: 'What is love 1',
     description: 'Babe don\'t hurt me',
-    tags: [
-      new mongoose.Types.ObjectId(),
-      new mongoose.Types.ObjectId()
-    ],
+    tags,
     attachments: [
       '/uploads/32342.jpg'
     ],
@@ -21,7 +23,7 @@ const questionsToCreate = [
     title: 'What is love 2',
     description: 'No more',
     tags: [
-      new mongoose.Types.ObjectId(),
+      tags[0],
       new mongoose.Types.ObjectId()
     ],
     attachments: [
@@ -87,5 +89,6 @@ module.exports = {
   questionToUpdate,
   answer,
   expectedAnswerText,
-  authorId
+  authorId,
+  tags
 };

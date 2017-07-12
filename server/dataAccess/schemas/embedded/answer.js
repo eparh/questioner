@@ -1,6 +1,7 @@
 'use strict';
 
 const BaseSchema = require('../base');
+const rating = require('../virtual/rating');
 
 class AnswerSchema extends BaseSchema {
   get() {
@@ -23,11 +24,7 @@ class AnswerSchema extends BaseSchema {
 
     answerSchema.virtual('rating')
       .get(function() {
-        const voters = Object.assign({}, this.voters);
-
-        return Object.values(voters).reduce((sum, value) => {
-          return sum + value;
-        }, 0);
+        return rating(this);
       });
 
     return answerSchema;

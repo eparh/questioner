@@ -1,7 +1,5 @@
 'use strict';
 
-/* eslint-disable no-unused-expressions */
-
 const { clearCollections } = require('../../helpers/database');
 const expect = require('chai').expect;
 
@@ -58,6 +56,29 @@ module.exports = (opts) => {
       });
     });
 
+    describe('#updateById', () => {
+      let createdModelId;
+
+      before(async () => {
+        const { modelToCreate } = data;
+        const newModel = await repository.create(modelToCreate);
+
+        createdModelId = newModel._id;
+      });
+
+      it('should update by id', async () => {
+        const { modelToUpdate } = data;
+
+        await repository.updateById(Object.assign({}, modelToUpdate, {
+          _id: createdModelId
+        }));
+
+        const updatedModel = await repository.findById(createdModelId);
+
+        expect(updatedModel).to.include(modelToUpdate);
+      });
+    });
+
     describe('#find', () => {
       before(() => {
         const { modelToCreate } = data;
@@ -69,6 +90,20 @@ module.exports = (opts) => {
         const models = await repository.find();
 
         expect(models).with.length(1);
+      });
+    });
+
+    describe('#findOne', () => {
+      before(() => {
+        const { modelToCreate } = data;
+
+        return repository.create(modelToCreate);
+      });
+
+      it('should find model with attributes', async () => {
+        const model = await repository.findOne();
+
+        return expect(model).to.exist;
       });
     });
 
@@ -87,7 +122,7 @@ module.exports = (opts) => {
 
         const models = await repository.find();
 
-        expect(models).to.be.an.empty;
+        return expect(models).to.be.an.empty;
       });
     });
 

@@ -2,6 +2,7 @@
 
 const BaseSchema = require('./base');
 const AnswerSchema = require('./embedded/answer');
+const rating = require('./virtual/rating');
 
 class QuestionSchema extends BaseSchema {
   get() {
@@ -32,11 +33,7 @@ class QuestionSchema extends BaseSchema {
 
     questionSchema.virtual('rating')
       .get(function() {
-        const voters = Object.assign({}, this.voters);
-
-        return Object.values(voters).reduce((sum, value) => {
-          return sum + value;
-        }, 0);
+        return rating(this);
       });
 
     return questionSchema;

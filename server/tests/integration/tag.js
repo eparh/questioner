@@ -82,7 +82,7 @@ describe('Tag API Test', () => {
 
     errorAuthTest(errorAuthData);
 
-    it('should create tag', async () => {
+    it.skip('should create tag', async () => {
       const response = await queryConstructor.sendRequest({
         method: 'post',
         url: `${routes.tags.url}`,

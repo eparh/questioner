@@ -8,7 +8,9 @@ const { clearCollections } = require('../../helpers/database');
 
 const { questionRepository } = require('../../../helpers/iocContainer').getAllDependencies();
 
-const { questionsToCreate, questionToCreate, questionToUpdate, answer, authorId } = require('./data/question');
+const {
+  questionsToCreate, questionToCreate, questionToUpdate, answer, authorId, tags
+} = require('./data/question');
 
 function cleanup() {
   return clearCollections([questionRepository.Model.modelName]);
@@ -29,12 +31,11 @@ describe('Question Repository', () => {
   generateTestsForBaseRepository(testOpts);
 
   describe('Getting', () => {
-    beforeEach(async () => {
+    before(() => {
       const promises = questionsToCreate.map(question => questionRepository.create(question));
 
-      await Promise.all(promises);
+      return Promise.all(promises);
     });
-
 
     describe('#getAll', () => {
       it('should get all questions', async () => {
@@ -46,24 +47,18 @@ describe('Question Repository', () => {
     });
 
     describe('#getByTags', () => {
-      let tags;
-
-      beforeEach(async () => {
-        const allDocuments = await questionRepository.getAll();
-
-        tags = allDocuments[0].tags;
-      });
-
       it('should get by tags array', async () => {
         const results = await questionRepository.getByTags(tags);
+        const expectedLength = 2;
 
-        expect(results).to.have.length(1);
+        expect(results).to.have.length(expectedLength);
       });
 
       it('should get by single tag', async () => {
         const results = await questionRepository.getByTags([tags[0]]);
+        const expectedLength = 2;
 
-        expect(results).to.have.length(1);
+        expect(results).to.have.length(expectedLength);
       });
 
       it('should not get by empty tags array', async () => {
@@ -89,6 +84,7 @@ describe('Question Repository', () => {
       });
     });
 
+    after(cleanup);
   });
 
   describe('=Embedded=', () => {
@@ -176,8 +172,8 @@ describe('Question Repository', () => {
         });
       });
     });
+    afterEach(cleanup);
   });
 
-  afterEach(cleanup);
   after(hooks.after);
 });

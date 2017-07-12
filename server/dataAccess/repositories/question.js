@@ -131,7 +131,6 @@ class QuestionRepository extends BaseRepository {
       }
     });
   }
-
 }
 
 module.exports = QuestionRepository;

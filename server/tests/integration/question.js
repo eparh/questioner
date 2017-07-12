@@ -41,13 +41,14 @@ describe('Question API Test', () => {
       url: `${routes.questions.url}`
     };
 
-    before(async () => {
+    before(() => {
+      // To-DO
+
       const promises = questionsToCreate.map(question => questionRepository.create(question));
 
       errorAuthData.queryConstructor = queryConstructor;
-      await Promise.all(promises);
+      return Promise.all(promises);
     });
-
 
     errorAuthTest(errorAuthData);
 
@@ -61,6 +62,7 @@ describe('Question API Test', () => {
         }
       });
 
+      // To-DO check each element
       expect(response.body.length).to.equal(questionsToCreate.length);
     });
 
@@ -98,6 +100,7 @@ describe('Question API Test', () => {
         }
       });
 
+      // TO-DO
       expect(response.body).to.have.property('description', resultQuestion.description);
     });
 
@@ -113,12 +116,12 @@ describe('Question API Test', () => {
     };
     let tags;
 
-    before(async () => {
+    before(() => {
       const promises = questionsToCreate.map(question => questionRepository.create(question));
 
       errorAuthData.queryConstructor = queryConstructor;
-      await Promise.all(promises);
       tags = questionsToCreate[0].tags.map(tag => tag.toString());
+      return Promise.all(promises);
     });
 
     errorAuthTest(errorAuthData);
@@ -366,7 +369,7 @@ describe('Question API Test', () => {
       expect(response.body.nModified).to.equal(1);
     });
 
-    it('shouldn\'t vote because question doensn\'t exist', async () => {
+    it('shouldn\'t vote because question doesn\'t exist', async () => {
 
       const response = await queryConstructor.sendRequest({
         method: 'put',
@@ -587,7 +590,7 @@ describe('Question API Test', () => {
       expect(response.body.nModified).to.equal(1);
     });
 
-    it('shouldn\'t update because author doensn\'t math', async () => {
+    it('shouldn\'t update because author doesn\'t match', async () => {
       await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/answers`,

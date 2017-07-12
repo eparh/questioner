@@ -40,7 +40,7 @@ function createSpy({ methodName }) {
   }
 
   return {
-    [methodName]: sinon.mock()
+    [methodName]: sinon.spy()
   };
 }
 
