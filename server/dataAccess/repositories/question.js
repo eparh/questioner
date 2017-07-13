@@ -47,8 +47,9 @@ class QuestionRepository extends BaseRepository {
       'answers.$': 1,
       _id: 0
     });
+    const result = Object.assign(this.toJSON(model), [])[0];
 
-    return Object.assign(this.toJSON(model), [])[0].answers[0];
+    return result && result.answers[0];
   }
 
   updateAnswer(questionId, answer) {

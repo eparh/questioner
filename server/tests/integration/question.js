@@ -12,12 +12,21 @@ const { success, emptyResponse } = require('../../constants').STATUS_CODES;
 
 const { questionRepository, userService } = require('../../helpers/iocContainer').getAllDependencies();
 const { clearCollections } = require('../helpers/database');
-
-const testData = require('./data/question');
+const {
+  questionToCreate, questionsToCreate, answer, fakeId, pathToAttaches, question
+} = require('./data/question');
 const { testUser } = require('./data/user');
 
 function clean() {
   return clearCollections([questionRepository.Model.modelName]);
+}
+
+function checkQuestion(question, expected) {
+  expect(question).to.have.property('description', expected.description);
+  expect(question).to.have.property('author', expected.author.toString());
+  expect(question).to.have.property('title', expected.title);
+  expect(question.attachments).to.eql(expected.attachments);
+  expect(question.answers).to.eql(expected.answers);
 }
 
 describe('Question API Test', () => {
@@ -34,7 +43,6 @@ describe('Question API Test', () => {
   });
 
   describe('[GET] /questions/', () => {
-    const { questionsToCreate } = testData;
     const errorAuthData = {
       method: 'get',
       text: 'should not get questions because not authorized',
@@ -42,8 +50,6 @@ describe('Question API Test', () => {
     };
 
     before(() => {
-      // To-DO
-
       const promises = questionsToCreate.map(question => questionRepository.create(question));
 
       errorAuthData.queryConstructor = queryConstructor;
@@ -62,15 +68,15 @@ describe('Question API Test', () => {
         }
       });
 
-      // To-DO check each element
-      expect(response.body.length).to.equal(questionsToCreate.length);
+      const { body } = response;
+
+      expect(body.length).to.equal(questionsToCreate.length);
     });
 
     after(clean);
   });
 
   describe('[GET] /questions/:id', () => {
-    const { questionToCreate } = testData;
     let questionId;
     let resultQuestion;
     const errorAuthData = {
@@ -100,15 +106,13 @@ describe('Question API Test', () => {
         }
       });
 
-      // TO-DO
-      expect(response.body).to.have.property('description', resultQuestion.description);
+      checkQuestion(response.body, resultQuestion);
     });
 
     after(clean);
   });
 
   describe('[GET] /questions/tags', () => {
-    const { questionsToCreate } = testData;
     const errorAuthData = {
       method: 'get',
       text: 'should not get questions by tags because not authorized',
@@ -164,7 +168,6 @@ describe('Question API Test', () => {
   });
 
   describe('[POST] /questions/', () => {
-    const { questionToCreate, pathToAttaches } = testData;
     const errorAuthData = {
       method: 'post',
       text: 'should not create question because not authorized',
@@ -225,11 +228,9 @@ describe('Question API Test', () => {
         filesHelper.cleanTestImagesDirectory()
       ]);
     });
-
   });
 
   describe('[PUT] /questions/', () => {
-    const { questionToCreate, pathToAttaches, fakeId, question } = testData;
     const errorAuthData = {
       method: 'put',
       text: 'should not update question because not authorized',
@@ -336,7 +337,6 @@ describe('Question API Test', () => {
   });
 
   describe('[PUT] /questions/:questionId/up', () => {
-    const { fakeId, question } = testData;
     const errorAuthData = {
       method: 'put',
       text: 'should not vote up question because not authorized'
@@ -370,7 +370,6 @@ describe('Question API Test', () => {
     });
 
     it('shouldn\'t vote because question doesn\'t exist', async () => {
-
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${fakeId}/up`,
@@ -393,7 +392,6 @@ describe('Question API Test', () => {
   });
 
   describe('[PUT] /questions/:questionId/down', () => {
-    const { fakeId, question } = testData;
     const errorAuthData = {
       method: 'put',
       text: 'should not vote down question because not authorized'
@@ -449,7 +447,6 @@ describe('Question API Test', () => {
   });
 
   describe('[DELETE] /questions/:id', () => {
-    const { fakeId, question } = testData;
     const errorAuthData = {
       method: 'delete',
       text: 'should not delete question because not authorized'
@@ -504,8 +501,6 @@ describe('Question API Test', () => {
   });
 
   describe('[POST] /:questionId/answers', () => {
-    const { questionToCreate, answer } = testData;
-
     let resultQuestion;
     let questionId;
 
@@ -543,8 +538,6 @@ describe('Question API Test', () => {
   });
 
   describe('[PUT] /:questionId/answers', () => {
-    const { questionToCreate, answer } = testData;
-
     let resultQuestion;
     let questionId;
     const answerWithoutAuthor = {};
@@ -600,15 +593,28 @@ describe('Question API Test', () => {
           cookie: cookies
         }
       });
+    });
 
+    it('shouldn\'t update because answer doensn\'t exist', async () => {
+      const answerWithFakeId = Object.assign({}, answer, {
+        _id: fakeId
+      });
+
+      await queryConstructor.sendRequest({
+        method: 'put',
+        url: `${routes.questions.url}/${questionId}/answers`,
+        body: answerWithFakeId,
+        expect: emptyResponse,
+        headers: {
+          cookie: cookies
+        }
+      });
     });
 
     after(clean);
   });
 
   describe('[DELETE] /:questionId/answers/:answerId', () => {
-    const { questionToCreate, answer, fakeId } = testData;
-
     let resultQuestion;
     let questionId;
     const answerWithoutAuthor = {};
@@ -662,25 +668,22 @@ describe('Question API Test', () => {
           cookie: cookies
         }
       });
-
-      it('shouldn\'t delete because answer doensn\'t exist', async () => {
-        await queryConstructor.sendRequest({
-          method: 'delete',
-          url: `${routes.questions.url}/answers/${fakeId}`,
-          expect: emptyResponse,
-          headers: {
-            cookie: cookies
-          }
-        });
-      });
-
     });
 
+    it('shouldn\'t delete because answer doensn\'t exist', async () => {
+      await queryConstructor.sendRequest({
+        method: 'delete',
+        url: `${routes.questions.url}/${questionId}/answers/${fakeId}`,
+        expect: emptyResponse,
+        headers: {
+          cookie: cookies
+        }
+      });
+    });
     after(clean);
   });
 
   describe('[PUT] /:questionId/answers/:answerId/vote/up', () => {
-    const { fakeId, question, answer } = testData;
     const errorAuthData = {
       method: 'put',
       text: 'should not vote up answer because not authorized'
@@ -754,7 +757,6 @@ describe('Question API Test', () => {
   });
 
   describe('[PUT] /:questionId/answers/:answerId/vote/down', () => {
-    const { fakeId, question, answer } = testData;
     const errorAuthData = {
       method: 'put',
       text: 'should not vote down answer because not authorized'

@@ -82,7 +82,7 @@ describe('Tag API Test', () => {
 
     errorAuthTest(errorAuthData);
 
-    it.skip('should create tag', async () => {
+    it('should create tag', async () => {
       const response = await queryConstructor.sendRequest({
         method: 'post',
         url: `${routes.tags.url}`,
@@ -93,7 +93,7 @@ describe('Tag API Test', () => {
         }
       });
 
-      expect(response.body.description).to.equal(tagToCreate.description);
+      expect(response.body.name).to.equal(tagToCreate.name);
     });
 
     it('should not create tag because of not admin', async () => {
