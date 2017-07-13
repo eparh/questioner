@@ -13,6 +13,10 @@ class BaseRepository {
     return self.toJSON(newModel);
   }
 
+  getById(id) {
+    return this.findById(id);
+  }
+
   update(query, info, opts) {
     return this.Model.update(query, info, opts);
   }

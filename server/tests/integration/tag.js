@@ -6,7 +6,7 @@ const expect = require('chai').expect;
 const login = require('../helpers/hooks/login');
 const initQueryConstructor = require('../helpers/utils/queryConstructor');
 const { errorAuthTest } = require('../helpers/testTemplates');
-const { success, forbidden } = require('../../constants').STATUS_CODES;
+const { success, forbidden, conflict, emptyResponse } = require('../../constants').STATUS_CODES;
 
 const { tagRepository, userService } = require('../../helpers/iocContainer').getAllDependencies();
 const { clearCollections } = require('../helpers/database');
@@ -131,7 +131,7 @@ describe('Tag API Test', () => {
     errorAuthTest(errorAuthData);
 
     it('should update tag', async () => {
-      tagToCreate.name = 'test-test';
+      tagToCreate.name = 'well-well';
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.tags.url}`,
@@ -142,14 +142,14 @@ describe('Tag API Test', () => {
         }
       });
 
-      expect(response.body.nModified).to.equal(1);
+      expect(response.body.name).to.equal(tagToCreate.name);
     });
 
-    it('shouldn\'t update because tag doensn\'t exist', async () => {
-      const response = await queryConstructor.sendRequest({
+    it('shouldn\'t update because tag doesn\'t exist', async () => {
+      await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.tags.url}`,
-        expect: success,
+        expect: conflict,
         body: Object.assign({}, tagToCreate, {
           _id: fakeId
         }),
@@ -157,8 +157,6 @@ describe('Tag API Test', () => {
           cookie: adminCookies
         }
       });
-
-      expect(response.body.nModified).to.equal(0);
     });
 
     it('shouldn\'t update because of not admin', async () => {
@@ -194,16 +192,14 @@ describe('Tag API Test', () => {
     errorAuthTest(errorAuthData);
 
     it('should delete tag', async () => {
-      const response = await queryConstructor.sendRequest({
+      await queryConstructor.sendRequest({
         method: 'delete',
         url: `${routes.tags.url}/${tagToCreate._id}`,
-        expect: success,
+        expect: emptyResponse,
         headers: {
           cookie: adminCookies
         }
       });
-
-      expect(response.body.n).to.equal(1);
     });
 
     it('should not delete tag because of not admin', async () => {
@@ -217,17 +213,15 @@ describe('Tag API Test', () => {
       });
     });
 
-    it('shouldn\'t delete because tag doensn\'t exist', async () => {
-      const response = await queryConstructor.sendRequest({
+    it('shouldn\'t delete because tag doesn\'t exist', async () => {
+      await queryConstructor.sendRequest({
         method: 'delete',
         url: `${routes.tags.url}/${fakeId}`,
-        expect: success,
+        expect: conflict,
         headers: {
           cookie: adminCookies
         }
       });
-
-      expect(response.body.n).to.equal(0);
     });
 
     afterEach(clean);

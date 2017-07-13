@@ -6,6 +6,10 @@ class TagService {
     this.mapper = mapper;
   }
 
+  getById(id) {
+    return this.tagRepository.getById(id);
+  }
+
   create(tag) {
     const { mapper, tagRepository } = this;
     const tagModel = mapper(tag, 'mapCreateTag');

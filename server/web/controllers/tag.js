@@ -1,5 +1,7 @@
 'use strict';
 
+const { conflict } = require('../../constants/').STATUS_CODES;
+
 class TagController {
   constructor({ tagService }) {
     this.tagService = tagService;
@@ -15,16 +17,24 @@ class TagController {
     return this.tagService.create(tag);
   }
 
-  update(ctx) {
+  async update(ctx) {
     const tag = ctx.request.body;
+    const result = await this.tagService.update(tag);
 
-    return this.tagService.update(tag);
+    return result.nModified ? this.tagService.getById(tag._id) : {
+      statusCode: conflict
+    };
   }
 
-  delete(ctx) {
+  async delete(ctx) {
     const id = ctx.params.id;
+    const res = await this.tagService.delete(id);
 
-    return this.tagService.delete(id);
+    if (!res.result.n) {
+      return {
+        statusCode: conflict
+      };
+    }
   }
 }
 

@@ -11,10 +11,6 @@ class QuestionRepository extends BaseRepository {
     return this.find({}, '-answers');
   }
 
-  getById(id) {
-    return this.findById(id);
-  }
-
   getByTags(tags) {
     return this.find({
       tags: {
