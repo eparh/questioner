@@ -4,12 +4,20 @@ const routes = require('./data/routes.json');
 const hooks = require('../helpers/hooks/integration');
 const expect = require('chai').expect;
 const initQueryConstructor = require('../helpers/utils/queryConstructor');
-const statusCodes = require('../../constants').STATUS_CODES;
+const { success, conflict, emptyResponse } = require('../../constants').STATUS_CODES;
 
 const { userRepository, userService } = require('../../helpers/iocContainer').getAllDependencies();
 const { clearCollections } = require('../helpers/database');
+const login = require('../helpers/hooks/login');
 
-const testData = require('./data/user');
+const { testUser } = require('./data/user');
+const cookie = require('cookie');
+const Redis = require('ioredis');
+const redis = new Redis();
+
+const config = require('config');
+const key = config.get('server.session-cookie');
+
 
 function clean() {
   return clearCollections([userRepository.Model.modelName]);
@@ -25,25 +33,33 @@ describe('User API Test', () => {
   });
 
   describe('[POST] /users/register', () => {
-    const { testUser } = testData;
-
     it('should register user', async () => {
       const response = await queryConstructor.sendRequest({
         method: 'post',
         url: `${routes.users.url}/register`,
         body: testUser,
-        expect: statusCodes.success
+        expect: success
       });
 
       expect(response.body.email).to.equal('test@gmail.com');
     });
 
-    after(clean);
+
+    it('should not register user because he exists', async () => {
+      await userService.register(testUser);
+
+      await queryConstructor.sendRequest({
+        method: 'post',
+        url: `${routes.users.url}/register`,
+        body: testUser,
+        expect: conflict
+      });
+    });
+
+    afterEach(clean);
   });
 
   describe('[POST] /users/login', () => {
-    const { testUser } = testData;
-
     before(async () => {
       await userService.register(testUser);
     });
@@ -53,7 +69,7 @@ describe('User API Test', () => {
         method: 'post',
         url: `${routes.users.url}/login`,
         body: testUser,
-        expect: statusCodes.success
+        expect: success
       });
 
       expect(response.body.email).to.equal('test@gmail.com');
@@ -63,14 +79,29 @@ describe('User API Test', () => {
   });
 
   describe('[POST] /users/logout', () => {
+    let cookies;
+    let stringCookies;
+
+    before(async () => {
+      await userService.register(testUser);
+      stringCookies = await login();
+
+      cookies = cookie.parse(stringCookies);
+    });
+
     it('should logout', async () => {
-      const response = await queryConstructor.sendRequest({
+      await queryConstructor.sendRequest({
         method: 'post',
         url: `${routes.users.url}/logout`,
-        expect: statusCodes.emptyResponse
+        expect: emptyResponse,
+        headers: {
+          cookie: stringCookies
+        }
       });
 
-      expect(response.headers).has.property('connection').that.equals('close');
+      const result = await redis.get(cookies[key]);
+
+      return expect(result).to.be.null;
     });
 
     after(clean);

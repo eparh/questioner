@@ -6,7 +6,7 @@ const rating = require('./virtual/rating');
 
 class QuestionSchema extends BaseSchema {
   get() {
-    const { Schema, ofType, required, objectRef } = this;
+    const { Schema, ofType, required, objectRef, includeVirtuals } = this;
 
     const questionSchema = new Schema({
       author: required(objectRef('User')),
@@ -23,12 +23,8 @@ class QuestionSchema extends BaseSchema {
     },
     {
       timestamps: true,
-      toObject: {
-        virtuals: true
-      },
-      toJSON: {
-        virtuals: true
-      }
+      toObject: includeVirtuals(),
+      toJSON: includeVirtuals()
     });
 
     questionSchema.virtual('rating')

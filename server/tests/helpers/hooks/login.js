@@ -7,10 +7,6 @@ const PORT = serverConfig.get('port');
 const generalOptions = require('../../integration/data/login');
 
 module.exports = async (user) => {
-  await request('http://localhost:3001/users/logout', {
-    method: 'POST'
-  });
-
   const options = Object.assign({}, generalOptions);
 
   if (user) {

@@ -6,7 +6,8 @@
       "transports" : [
         "console"
       ]
-    }
+    },
+    "session-cookie" : "koa:sess"
   },
   "database" : {
     "uri": "mongodb://localhost/base",

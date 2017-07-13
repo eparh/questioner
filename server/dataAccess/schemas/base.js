@@ -20,6 +20,12 @@ class BaseSchema {
     });
   }
 
+  includeVirtuals() {
+    return Object.assign({}, {
+      virtuals: true
+    });
+  }
+
   unique(fieldDescription) {
     return Object.assign({}, fieldDescription, {
       unique: true

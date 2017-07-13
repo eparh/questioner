@@ -7,6 +7,7 @@ class UserController {
 
   logout(ctx) {
     ctx.logout();
+    ctx.session = null;
   }
 
   register(ctx) {

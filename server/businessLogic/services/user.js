@@ -1,5 +1,7 @@
 'use strict';
 
+const { conflict } = require('../../constants').STATUS_CODES;
+
 class UserService {
   constructor({ userRepository, bcryptService }) {
     this.userRepository = userRepository;
@@ -16,6 +18,9 @@ class UserService {
       data.password = await bcryptService.generateHash(formData.password);
       return userRepository.create(data);
     }
+    return {
+      statusCode: conflict
+    };
   }
 
   findByEmail(email) {

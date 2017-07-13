@@ -7,5 +7,6 @@ module.exports = {
   emptyResponse: 204,
   unauthorized: 401,
   notFound: 404,
-  forbidden: 403
+  forbidden: 403,
+  conflict: 409
 };
