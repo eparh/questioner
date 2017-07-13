@@ -5,8 +5,8 @@ const hooks = require('../helpers/hooks/integration');
 const expect = require('chai').expect;
 const login = require('../helpers/hooks/login');
 const initQueryConstructor = require('../helpers/utils/queryConstructor');
-const { errorAuthTest } = require('../helpers/testTemplates');
-const { success, forbidden, conflict, emptyResponse } = require('../../constants').STATUS_CODES;
+const { errorAuthTest, errorNotAdminTest } = require('../helpers/testTemplates');
+const { success, conflict, emptyResponse } = require('../../constants').STATUS_CODES;
 
 const { tagRepository, userService } = require('../../helpers/iocContainer').getAllDependencies();
 const { clearCollections } = require('../helpers/database');
@@ -21,8 +21,8 @@ function clean() {
 describe('Tag API Test', () => {
   let app;
   let adminCookies;
-  let userCookies;
   let queryConstructor;
+  let userDataTemplate;
 
   before(async () => {
     app = await hooks.before();
@@ -32,7 +32,14 @@ describe('Tag API Test', () => {
       userService.register(testUser)
     ]);
     adminCookies = await login(testAdmin);
-    userCookies = await login(testUser);
+    const userCookies = await login(testUser);
+
+    userDataTemplate = {
+      queryConstructor,
+      headers: {
+        cookie: userCookies
+      }
+    };
   });
 
   describe('[GET] /tags/', () => {
@@ -73,14 +80,22 @@ describe('Tag API Test', () => {
     const errorAuthData = {
       method: 'post',
       text: 'should not create tag because not authorized',
-      url: `${routes.questions.url}`
+      url: `${routes.tags.url}`
+    };
+    const errorNotAdminData = {
+      method: 'post',
+      text: 'should not create tag because of not admin',
+      url: `${routes.tags.url}`
     };
 
-    before(async () => {
+    before(() => {
       errorAuthData.queryConstructor = queryConstructor;
+      Object.assign(errorNotAdminData, userDataTemplate);
     });
 
     errorAuthTest(errorAuthData);
+
+    errorNotAdminTest(errorNotAdminData);
 
     it('should create tag', async () => {
       const response = await queryConstructor.sendRequest({
@@ -96,18 +111,6 @@ describe('Tag API Test', () => {
       expect(response.body.name).to.equal(tagToCreate.name);
     });
 
-    it('should not create tag because of not admin', async () => {
-      await queryConstructor.sendRequest({
-        method: 'post',
-        url: `${routes.tags.url}`,
-        expect: forbidden,
-        body: tagToCreate,
-        headers: {
-          cookie: userCookies
-        }
-      });
-    });
-
     after(clean);
   });
 
@@ -118,6 +121,11 @@ describe('Tag API Test', () => {
       text: 'should not update tag because not authorized',
       url: `${routes.tags.url}`
     };
+    const errorNotAdminData = {
+      method: 'put',
+      text: 'should not update tag because of not admin',
+      url: `${routes.tags.url}`
+    };
 
     let resultTag;
 
@@ -126,9 +134,12 @@ describe('Tag API Test', () => {
       tagToCreate._id = resultTag._id;
 
       errorAuthData.queryConstructor = queryConstructor;
+      Object.assign(errorNotAdminData, userDataTemplate);
     });
 
     errorAuthTest(errorAuthData);
+
+    errorNotAdminTest(errorNotAdminData);
 
     it('should update tag', async () => {
       tagToCreate.name = 'well-well';
@@ -159,18 +170,6 @@ describe('Tag API Test', () => {
       });
     });
 
-    it('shouldn\'t update because of not admin', async () => {
-      await queryConstructor.sendRequest({
-        method: 'put',
-        url: `${routes.tags.url}`,
-        expect: forbidden,
-        body: tagToCreate,
-        headers: {
-          cookie: userCookies
-        }
-      });
-    });
-
     after(clean);
   });
 
@@ -181,15 +180,28 @@ describe('Tag API Test', () => {
       text: 'should not delete question because not authorized',
       url: `${routes.tags.url}/${fakeId}`
     };
+    const errorNotAdminData = {
+      method: 'delete',
+      text: 'should not delete tag because of not admin'
+    };
 
     beforeEach(async () => {
       const { _id } = await tagRepository.create(tagToCreate);
 
-      tagToCreate._id = _id;
       errorAuthData.queryConstructor = queryConstructor;
+      Object.assign(
+        errorNotAdminData,
+        userDataTemplate,
+        {
+          url: `${routes.tags.url}/${tagToCreate._id}`
+        });
+
+      tagToCreate._id = _id;
     });
 
     errorAuthTest(errorAuthData);
+
+    errorNotAdminTest(errorNotAdminData);
 
     it('should delete tag', async () => {
       await queryConstructor.sendRequest({
@@ -198,17 +210,6 @@ describe('Tag API Test', () => {
         expect: emptyResponse,
         headers: {
           cookie: adminCookies
-        }
-      });
-    });
-
-    it('should not delete tag because of not admin', async () => {
-      await queryConstructor.sendRequest({
-        method: 'delete',
-        url: `${routes.tags.url}/${tagToCreate._id}`,
-        expect: forbidden,
-        headers: {
-          cookie: userCookies
         }
       });
     });

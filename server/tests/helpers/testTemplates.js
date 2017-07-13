@@ -1,6 +1,6 @@
 'use strict';
 
-const statusCodes = require('../../constants').STATUS_CODES;
+const { forbidden, unauthorized } = require('../../constants').STATUS_CODES;
 
 function errorAuthTest(opts) {
   const { text, method } = opts;
@@ -9,11 +9,25 @@ function errorAuthTest(opts) {
     await opts.queryConstructor.sendRequest({
       method,
       url: opts.url,
-      expect: statusCodes.unauthorized
+      expect: unauthorized
+    });
+  });
+}
+
+function errorNotAdminTest(opts) {
+  const { text, method } = opts;
+
+  it(text, async () => {
+    await opts.queryConstructor.sendRequest({
+      method,
+      url: opts.url,
+      expect: forbidden,
+      headers: opts.headers
     });
   });
 }
 
 module.exports = {
-  errorAuthTest
+  errorAuthTest,
+  errorNotAdminTest
 };

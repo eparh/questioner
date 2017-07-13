@@ -20,9 +20,20 @@ class BaseSchema {
     });
   }
 
-  includeVirtuals() {
-    return Object.assign({}, {
-      virtuals: true
+  withTimeStamps(fieldDescription) {
+    return Object.assign({}, fieldDescription, {
+      timestamps: true
+    });
+  }
+
+  includeVirtuals(fieldDescription) {
+    return Object.assign({}, fieldDescription, {
+      toObject: {
+        virtuals: true
+      },
+      toJSON: {
+        virtuals: true
+      }
     });
   }
 
