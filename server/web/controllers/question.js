@@ -1,5 +1,7 @@
 'use strict';
 
+const { conflict } = require('../../constants/').STATUS_CODES;
+
 class QuestionController {
   constructor({ questionService }) {
     this.questionService = questionService;
@@ -29,33 +31,48 @@ class QuestionController {
     return this.questionService.createQuestion(question, files, userId);
   }
 
-  updateQuestion(ctx) {
+  async updateQuestion(ctx) {
     const question = ctx.request.body;
     const files = ctx.req.files || [];
     const user = ctx.state.user;
+    const result = await this.questionService.updateQuestion(question, files, user);
 
-    return this.questionService.updateQuestion(question, files, user);
+    return result ? this.questionService.getById(question._id) : {
+      statusCode: conflict
+    };
   }
 
-  voteUpQuestion(ctx) {
+  async voteUpQuestion(ctx) {
+    const { questionId } = ctx.params;
+    const voterId = ctx.state.user._id;
+    const result = await this.questionService.voteUpQuestion(questionId, voterId);
+
+    return result.nModified ? this.questionService.getById(questionId) : {
+      statusCode: conflict
+    };
+  }
+
+  async voteDownQuestion(ctx) {
     const { questionId } = ctx.params;
     const voterId = ctx.state.user._id;
 
-    return this.questionService.voteUpQuestion(questionId, voterId);
+    const result = await this.questionService.voteDownQuestion(questionId, voterId);
+
+    return result.nModified ? this.questionService.getById(questionId) : {
+      statusCode: conflict
+    };
   }
 
-  voteDownQuestion(ctx) {
-    const { questionId } = ctx.params;
-    const voterId = ctx.state.user._id;
-
-    return this.questionService.voteDownQuestion(questionId, voterId);
-  }
-
-  deleteQuestion(ctx) {
+  async deleteQuestion(ctx) {
     const id = ctx.params.id;
     const user = ctx.state.user;
+    const result = await this.questionService.deleteQuestion(id, user);
 
-    return this.questionService.deleteQuestion(id, user);
+    if (! result) {
+      return {
+        statusCode: conflict
+      };
+    }
   }
 
   createAnswer(ctx) {

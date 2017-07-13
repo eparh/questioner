@@ -99,9 +99,9 @@ describe('User API Test', () => {
         }
       });
 
-      const result = await redis.get(cookies[key]);
+      const result = JSON.parse(await redis.get(cookies[key]));
 
-      return expect(result).to.be.null;
+      return expect(result.passport).to.be.empty;
     });
 
     after(clean);

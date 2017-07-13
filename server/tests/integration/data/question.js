@@ -39,6 +39,7 @@ const questionsToCreate = [
   },
   {
     author: new mongoose.Types.ObjectId(),
+    answers: [],
     title: 'What is love 3',
     description: 'No more',
     tags: [

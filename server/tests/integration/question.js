@@ -8,7 +8,7 @@ const initQueryConstructor = require('../helpers/utils/queryConstructor');
 const queryString = require('query-string');
 const filesHelper = require('../helpers/utils/filesHelper');
 const { errorAuthTest } = require('../helpers/testTemplates');
-const { success, emptyResponse } = require('../../constants').STATUS_CODES;
+const { success, emptyResponse, conflict } = require('../../constants').STATUS_CODES;
 
 const { questionRepository, userService } = require('../../helpers/iocContainer').getAllDependencies();
 const { clearCollections } = require('../helpers/database');
@@ -22,11 +22,12 @@ function clean() {
 }
 
 function checkQuestion(question, expected) {
-  expect(question).to.have.property('description', expected.description);
-  expect(question).to.have.property('author', expected.author.toString());
   expect(question).to.have.property('title', expected.title);
-  expect(question.attachments).to.eql(expected.attachments);
-  expect(question.answers).to.eql(expected.answers);
+  expect(question).to.have.property('description', expected.description);
+  // expect(question.attachments).to.eql(expected.attachments);
+  if (expected.answers) {
+    expect(question.answers).to.eql(expected.answers);
+  }
 }
 
 describe('Question API Test', () => {
@@ -48,12 +49,13 @@ describe('Question API Test', () => {
       text: 'should not get questions because not authorized',
       url: `${routes.questions.url}`
     };
+    let createdQuestions;
 
-    before(() => {
+    before(async () => {
       const promises = questionsToCreate.map(question => questionRepository.create(question));
 
       errorAuthData.queryConstructor = queryConstructor;
-      return Promise.all(promises);
+      createdQuestions = await Promise.all(promises);
     });
 
     errorAuthTest(errorAuthData);
@@ -70,7 +72,10 @@ describe('Question API Test', () => {
 
       const { body } = response;
 
-      expect(body.length).to.equal(questionsToCreate.length);
+      expect(body.length).to.equal(createdQuestions.length);
+      /* body.forEach((question, index) => {
+        checkQuestion(question, createdQuestions[2 - index]);
+      });*/
     });
 
     after(clean);
@@ -191,7 +196,7 @@ describe('Question API Test', () => {
         }
       });
 
-      expect(response.body.description).to.equal(questionToCreate.description);
+      checkQuestion(response.body, questionToCreate);
     });
 
     it('should create question with attachments', async () => {
@@ -219,7 +224,7 @@ describe('Question API Test', () => {
         attachments
       });
 
-      expect(response.body).to.has.property('description');
+      checkQuestion(response.body, questionToCreate);
     });
 
     after(() => {
@@ -263,16 +268,16 @@ describe('Question API Test', () => {
         }
       });
 
-      expect(response.body.nModified).to.equal(1);
+      checkQuestion(response.body, questionToCreate);
     });
 
-    it('shouldn\'t update because question doensn\'t exist', async () => {
+    it('shouldn\'t update because question doesn\'t exist', async () => {
       questionToCreate._id = fakeId;
 
       await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}`,
-        expect: emptyResponse,
+        expect: conflict,
         body: questionToCreate,
         headers: {
           cookie: cookies
@@ -281,7 +286,7 @@ describe('Question API Test', () => {
 
     });
 
-    it('shouldn\'t update because author doensn\'t math', async () => {
+    it('shouldn\'t update because author doesn\'t math', async () => {
       before(async () => {
         resultQuestion = await questionRepository.create(question);
         question._id = resultQuestion._id;
@@ -290,7 +295,7 @@ describe('Question API Test', () => {
       await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}`,
-        expect: emptyResponse,
+        expect: conflict,
         body: question,
         headers: {
           cookie: cookies
@@ -366,20 +371,18 @@ describe('Question API Test', () => {
         }
       });
 
-      expect(response.body.nModified).to.equal(1);
+      expect(response.body.rating).to.equal(1);
     });
 
     it('shouldn\'t vote because question doesn\'t exist', async () => {
-      const response = await queryConstructor.sendRequest({
+      await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${fakeId}/up`,
-        expect: success,
+        expect: conflict,
         headers: {
           cookie: cookies
         }
       });
-
-      expect(response.body.nModified).to.equal(0);
     });
 
     afterEach(() => {
@@ -420,21 +423,18 @@ describe('Question API Test', () => {
         }
       });
 
-      expect(response.body.nModified).to.equal(1);
+      expect(response.body.rating).to.equal(-1);
     });
 
-    it('shouldn\'t vote because question doensn\'t exist', async () => {
-
-      const response = await queryConstructor.sendRequest({
+    it('shouldn\'t vote because question doesn\'t exist', async () => {
+      await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${fakeId}/down`,
-        expect: success,
+        expect: conflict,
         headers: {
           cookie: cookies
         }
       });
-
-      expect(response.body.nModified).to.equal(0);
     });
 
     afterEach(() => {
@@ -468,25 +468,36 @@ describe('Question API Test', () => {
     errorAuthTest(errorAuthData);
 
     it('should delete question', async () => {
-      const response = await queryConstructor.sendRequest({
+      await queryConstructor.sendRequest({
         method: 'delete',
         url: `${routes.questions.url}/${questionId}`,
-        expect: success,
+        expect: emptyResponse,
         headers: {
           cookie: cookies
         }
       });
-
-      expect(response.body.n).to.equal(1);
     });
 
-    it('shouldn\'t delete because question doensn\'t exist', async () => {
+    it('shouldn\'t delete because question doesn\'t exist', async () => {
       await queryConstructor.sendRequest({
         method: 'delete',
         url: `${routes.questions.url}/${fakeId}`,
-        expect: emptyResponse,
+        expect: conflict,
         headers: {
           cookie: cookies
+        }
+      });
+    });
+
+    it('shouldn\'t delete because author doesn\'t math', async () => {
+      const otherCookie = await login();
+
+      await queryConstructor.sendRequest({
+        method: 'delete',
+        url: `${routes.questions.url}/${fakeId}`,
+        expect: conflict,
+        headers: {
+          cookie: otherCookie
         }
       });
     });

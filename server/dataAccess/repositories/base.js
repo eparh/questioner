@@ -17,6 +17,19 @@ class BaseRepository {
     return this.Model.update(query, info, opts);
   }
 
+  findOneAndUpdate(info) {
+    const self = this;
+    const model = this.Model.findOneAndUpdate(
+      {
+        _id: info._id
+      }, info,
+      {
+        new: true
+      });
+
+    return self.toJSON(model);
+  }
+
   updateById(info) {
     return this.update({
       _id: info._id
