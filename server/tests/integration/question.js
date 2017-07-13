@@ -542,7 +542,7 @@ describe('Question API Test', () => {
         }
       });
 
-      expect(response.body.nModified).to.equal(1);
+      expect(response.body.answers[0]).to.include(answer);
     });
 
     after(clean);
@@ -563,7 +563,7 @@ describe('Question API Test', () => {
     before(async () => {
       resultQuestion = await questionRepository.create(questionToCreate);
       questionId = resultQuestion._id;
-      answer.author = user;
+      answer.author = user._id;
 
       await questionRepository.addAnswer(questionId, answer);
       await questionRepository.addAnswer(questionId, answerWithoutAuthor);
@@ -591,14 +591,16 @@ describe('Question API Test', () => {
         }
       });
 
-      expect(response.body.nModified).to.equal(1);
+      answer.author = answer.author.toString();
+      answer._id = answer._id.toString();
+      expect(response.body.answers[0]).to.include(answer);
     });
 
     it('shouldn\'t update because author doesn\'t match', async () => {
       await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/answers`,
-        expect: emptyResponse,
+        expect: conflict,
         body: answerWithoutAuthor,
         headers: {
           cookie: cookies
@@ -615,7 +617,7 @@ describe('Question API Test', () => {
         method: 'put',
         url: `${routes.questions.url}/${questionId}/answers`,
         body: answerWithFakeId,
-        expect: emptyResponse,
+        expect: conflict,
         headers: {
           cookie: cookies
         }
@@ -667,14 +669,14 @@ describe('Question API Test', () => {
         }
       });
 
-      expect(response.body.nModified).to.equal(1);
+      expect(response.body.answers.length).to.equal(1);
     });
 
-    it('shouldn\'t delete because author doensn\'t math', async () => {
+    it('shouldn\'t delete because author doesn\'t math', async () => {
       await queryConstructor.sendRequest({
         method: 'delete',
         url: `${routes.questions.url}/${questionId}/answers/${answerWithoutAuthor._id}`,
-        expect: emptyResponse,
+        expect: conflict,
         headers: {
           cookie: cookies
         }
@@ -685,7 +687,7 @@ describe('Question API Test', () => {
       await queryConstructor.sendRequest({
         method: 'delete',
         url: `${routes.questions.url}/${questionId}/answers/${fakeId}`,
-        expect: emptyResponse,
+        expect: conflict,
         headers: {
           cookie: cookies
         }
@@ -719,7 +721,7 @@ describe('Question API Test', () => {
 
     errorAuthTest(errorAuthData);
 
-    it('should vote up question', async () => {
+    it('should vote up answer', async () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/answers/${answer._id}/vote/up`,
@@ -729,33 +731,29 @@ describe('Question API Test', () => {
         }
       });
 
-      expect(response.body.nModified).to.equal(1);
+      expect(response.body.answers[0].rating).to.equal(1);
     });
 
-    it('shouldn\'t vote because question doensn\'t exist', async () => {
-      const response = await queryConstructor.sendRequest({
+    it('shouldn\'t vote because question doesn\'t exist', async () => {
+      await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${fakeId}/answers/${answer._id}/vote/up`,
-        expect: success,
+        expect: conflict,
         headers: {
           cookie: cookies
         }
       });
-
-      expect(response.body.nModified).to.equal(0);
     });
 
-    it('shouldn\'t vote because answer doensn\'t exist', async () => {
-      const response = await queryConstructor.sendRequest({
+    it('shouldn\'t vote because answer doesn\'t exist', async () => {
+      await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/answers/${fakeId}/vote/up`,
-        expect: success,
+        expect: conflict,
         headers: {
           cookie: cookies
         }
       });
-
-      expect(response.body.nModified).to.equal(0);
     });
 
     afterEach(() => {
@@ -764,7 +762,6 @@ describe('Question API Test', () => {
         filesHelper.cleanTestImagesDirectory()
       ]);
     });
-
   });
 
   describe('[PUT] /:questionId/answers/:answerId/vote/down', () => {
@@ -792,7 +789,7 @@ describe('Question API Test', () => {
 
     errorAuthTest(errorAuthData);
 
-    it('should vote up question', async () => {
+    it('should vote down answer', async () => {
       const response = await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/answers/${answer._id}/vote/down`,
@@ -802,33 +799,29 @@ describe('Question API Test', () => {
         }
       });
 
-      expect(response.body.nModified).to.equal(1);
+      expect(response.body.answers[0].rating).to.equal(-1);
     });
 
-    it('shouldn\'t vote because question doensn\'t exist', async () => {
-      const response = await queryConstructor.sendRequest({
+    it('shouldn\'t vote because question doesn\'t exist', async () => {
+      await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${fakeId}/answers/${answer._id}/vote/down`,
-        expect: success,
+        expect: conflict,
         headers: {
           cookie: cookies
         }
       });
-
-      expect(response.body.nModified).to.equal(0);
     });
 
-    it('shouldn\'t vote because answer doensn\'t exist', async () => {
-      const response = await queryConstructor.sendRequest({
+    it('shouldn\'t vote because answer doesn\'t exist', async () => {
+      await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}/${questionId}/answers/${fakeId}/vote/down`,
-        expect: success,
+        expect: conflict,
         headers: {
           cookie: cookies
         }
       });
-
-      expect(response.body.nModified).to.equal(0);
     });
 
     afterEach(() => {

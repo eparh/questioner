@@ -75,41 +75,56 @@ class QuestionController {
     }
   }
 
-  createAnswer(ctx) {
+  async createAnswer(ctx) {
     const questionId = ctx.params.questionId;
     const answer = ctx.request.body;
     const userId = ctx.state.user._id;
+    const result = await this.questionService.createAnswer(questionId, answer, userId);
 
-    return this.questionService.createAnswer(questionId, answer, userId);
+    return result ? this.questionService.getById(questionId) : {
+      statusCode: conflict
+    };
   }
 
-  updateAnswer(ctx) {
+  async updateAnswer(ctx) {
     const questionId = ctx.params.questionId;
     const answer = ctx.request.body;
     const user = ctx.state.user;
+    const result = await this.questionService.updateAnswer(questionId, answer, user);
 
-    return this.questionService.updateAnswer(questionId, answer, user);
+    return result ? this.questionService.getById(questionId) : {
+      statusCode: conflict
+    };
   }
 
-  deleteAnswer(ctx) {
+  async deleteAnswer(ctx) {
     const { questionId, answerId } = ctx.params;
     const user = ctx.state.user;
+    const result = await this.questionService.deleteAnswer(questionId, answerId, user);
 
-    return this.questionService.deleteAnswer(questionId, answerId, user);
+    return result ? this.questionService.getById(questionId) : {
+      statusCode: conflict
+    };
   }
 
-  voteUpAnswer(ctx) {
+  async voteUpAnswer(ctx) {
     const { questionId, answerId } = ctx.params;
     const voterId = ctx.state.user._id;
+    const result = await this.questionService.voteUpAnswer(questionId, answerId, voterId);
 
-    return this.questionService.voteUpAnswer(questionId, answerId, voterId);
+    return result.nModified ? this.questionService.getById(questionId) : {
+      statusCode: conflict
+    };
   }
 
-  voteDownAnswer(ctx) {
+  async voteDownAnswer(ctx) {
     const { questionId, answerId } = ctx.params;
     const voterId = ctx.state.user._id;
+    const result = await this.questionService.voteDownAnswer(questionId, answerId, voterId);
 
-    return this.questionService.voteDownAnswer(questionId, answerId, voterId);
+    return result.nModified ? this.questionService.getById(questionId) : {
+      statusCode: conflict
+    };
   }
 }
 
