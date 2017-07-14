@@ -72,12 +72,6 @@ class BaseSchema {
       required: true
     });
   }
-
-  setIndex(fieldDescription, opts) {
-    return Object.assign({}, fieldDescription, {
-      index: opts
-    });
-  }
 }
 
 module.exports = BaseSchema;
