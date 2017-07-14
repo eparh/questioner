@@ -5,7 +5,7 @@ const hooks = require('../helpers/hooks/integration');
 const expect = require('chai').expect;
 const login = require('../helpers/hooks/login');
 const initQueryConstructor = require('../helpers/utils/queryConstructor');
-const { errorAuthTest, errorNotAdminTest } = require('../helpers/testTemplates');
+const { errorAuthTest, errorNotAdminTest, errorValidationTest } = require('../helpers/testTemplates');
 const { success, conflict, emptyResponse } = require('../../constants').STATUS_CODES;
 
 const { tagRepository, userService } = require('../../helpers/iocContainer').getAllDependencies();
@@ -22,7 +22,6 @@ describe('Tag API Test', () => {
   let app;
   let adminCookies;
   let queryConstructor;
-  let userDataTemplate;
 
   before(async () => {
     app = await hooks.before();
@@ -32,14 +31,6 @@ describe('Tag API Test', () => {
       userService.register(testUser)
     ]);
     adminCookies = await login(testAdmin);
-    const userCookies = await login(testUser);
-
-    userDataTemplate = {
-      queryConstructor,
-      headers: {
-        cookie: userCookies
-      }
-    };
   });
 
   describe('[GET] /tags/', () => {
@@ -87,15 +78,26 @@ describe('Tag API Test', () => {
       text: 'should not create tag because of not admin',
       url: `${routes.tags.url}`
     };
+    const errorValidatiohData = {
+      method: 'post',
+      text: 'should not create tag because of a validation failure',
+      url: `${routes.tags.url}`
+    };
 
     before(() => {
       errorAuthData.queryConstructor = queryConstructor;
-      Object.assign(errorNotAdminData, userDataTemplate);
+      errorNotAdminData.queryConstructor = queryConstructor;
+      Object.assign(errorValidatiohData, {
+        queryConstructor,
+        headers: {
+          cookie: adminCookies
+        }
+      });
     });
 
     errorAuthTest(errorAuthData);
-
     errorNotAdminTest(errorNotAdminData);
+    errorValidationTest(errorValidatiohData);
 
     it('should create tag', async () => {
       const response = await queryConstructor.sendRequest({
@@ -126,6 +128,11 @@ describe('Tag API Test', () => {
       text: 'should not update tag because of not admin',
       url: `${routes.tags.url}`
     };
+    const errorValidatiohData = {
+      method: 'post',
+      text: 'should not create tag because of a validation failure',
+      url: `${routes.tags.url}`
+    };
 
     let resultTag;
 
@@ -134,12 +141,18 @@ describe('Tag API Test', () => {
       tagToCreate._id = resultTag._id;
 
       errorAuthData.queryConstructor = queryConstructor;
-      Object.assign(errorNotAdminData, userDataTemplate);
+      errorNotAdminData.queryConstructor = queryConstructor;
+      Object.assign(errorValidatiohData, {
+        queryConstructor,
+        headers: {
+          cookie: adminCookies
+        }
+      });
     });
 
     errorAuthTest(errorAuthData);
-
     errorNotAdminTest(errorNotAdminData);
+    errorValidationTest(errorValidatiohData);
 
     it('should update tag', async () => {
       tagToCreate.name = 'well-well';
@@ -191,9 +204,9 @@ describe('Tag API Test', () => {
       errorAuthData.queryConstructor = queryConstructor;
       Object.assign(
         errorNotAdminData,
-        userDataTemplate,
         {
-          url: `${routes.tags.url}/${tagToCreate._id}`
+          url: `${routes.tags.url}/${tagToCreate._id}`,
+          queryConstructor
         });
 
       tagToCreate._id = _id;

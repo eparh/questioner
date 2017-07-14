@@ -8,7 +8,6 @@ module.exports = (ctx) => {
   ctx.checkBody('title').notEmpty();
   ctx.checkBody('description').notEmpty();
   ctx.checkBody('tags').optional();
-  ctx.checkBody('attachments').optional();
 };
 
 

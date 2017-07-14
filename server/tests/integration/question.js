@@ -7,7 +7,7 @@ const login = require('../helpers/hooks/login');
 const initQueryConstructor = require('../helpers/utils/queryConstructor');
 const queryString = require('query-string');
 const filesHelper = require('../helpers/utils/filesHelper');
-const { errorAuthTest } = require('../helpers/testTemplates');
+const { errorAuthTest, errorValidationTest } = require('../helpers/testTemplates');
 const { success, emptyResponse, conflict } = require('../../constants').STATUS_CODES;
 
 const { questionRepository, userService } = require('../../helpers/iocContainer').getAllDependencies();
@@ -101,7 +101,7 @@ describe('Question API Test', () => {
 
     errorAuthTest(errorAuthData);
 
-    it('should get question', async () => {
+    it('should get a question', async () => {
       const response = await queryConstructor.sendRequest({
         method: 'get',
         url: `${routes.questions.url}/${questionId}`,
@@ -112,6 +112,17 @@ describe('Question API Test', () => {
       });
 
       checkQuestion(response.body, resultQuestion);
+    });
+
+    it('should not get a question because of fake id', () => {
+      queryConstructor.sendRequest({
+        method: 'get',
+        url: `${routes.questions.url}/${fakeId}`,
+        expect: emptyResponse,
+        headers: {
+          cookie: cookies
+        }
+      });
     });
 
     after(clean);
@@ -178,12 +189,24 @@ describe('Question API Test', () => {
       text: 'should not create question because not authorized',
       url: `${routes.questions.url}`
     };
+    const errorValidatiohData = {
+      method: 'post',
+      text: 'should not create question because of a validation failure',
+      url: `${routes.questions.url}`
+    };
 
     before(async () => {
       errorAuthData.queryConstructor = queryConstructor;
+      Object.assign(errorValidatiohData, {
+        queryConstructor,
+        headers: {
+          cookie: cookies
+        }
+      });
     });
 
     errorAuthTest(errorAuthData);
+    errorValidationTest(errorValidatiohData);
 
     it('should create question', async () => {
       const response = await queryConstructor.sendRequest({
@@ -241,6 +264,11 @@ describe('Question API Test', () => {
       text: 'should not update question because not authorized',
       url: `${routes.questions.url}`
     };
+    const errorValidatiohData = {
+      method: 'put',
+      text: 'should not create question because of a validation failure',
+      url: `${routes.questions.url}`
+    };
 
     let resultQuestion;
 
@@ -253,9 +281,16 @@ describe('Question API Test', () => {
       question._id = resultQuestion._id;
 
       errorAuthData.queryConstructor = queryConstructor;
+      Object.assign(errorValidatiohData, {
+        queryConstructor,
+        headers: {
+          cookie: cookies
+        }
+      });
     });
 
     errorAuthTest(errorAuthData);
+    errorValidationTest(errorValidatiohData);
 
     it('should update question', async () => {
       const response = await queryConstructor.sendRequest({
@@ -271,10 +306,10 @@ describe('Question API Test', () => {
       checkQuestion(response.body, questionToCreate);
     });
 
-    it('shouldn\'t update because question doesn\'t exist', async () => {
+    it('shouldn\'t update because question doesn\'t exist', () => {
       questionToCreate._id = fakeId;
 
-      await queryConstructor.sendRequest({
+      queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.questions.url}`,
         expect: conflict,
@@ -283,7 +318,6 @@ describe('Question API Test', () => {
           cookie: cookies
         }
       });
-
     });
 
     it('shouldn\'t update because author doesn\'t math', async () => {
@@ -520,6 +554,12 @@ describe('Question API Test', () => {
       text: 'should not create answer because not authorized'
     };
 
+    const errorValidatiohData = {
+      method: 'put',
+      text: 'should not create question because of a validation failure',
+      url: `${routes.questions.url}`
+    };
+
     before(async () => {
       resultQuestion = await questionRepository.create(questionToCreate);
       questionId = resultQuestion._id;
@@ -527,9 +567,17 @@ describe('Question API Test', () => {
         queryConstructor,
         url: `${routes.questions.url}/${questionId}/answers`
       });
+      Object.assign(errorValidatiohData, {
+        queryConstructor,
+        headers: {
+          cookie: cookies
+        },
+        url: `${routes.questions.url}/${questionId}/answers`
+      });
     });
 
     errorAuthTest(errorAuthData);
+    errorValidationTest(errorValidatiohData);
 
     it('should create answer', async () => {
       const response = await queryConstructor.sendRequest({
@@ -560,6 +608,11 @@ describe('Question API Test', () => {
       text: 'should not update answer because not authorized'
     };
 
+    const errorValidatiohData = {
+      method: 'put',
+      text: 'should not update answer because of a validation failure'
+    };
+
     before(async () => {
       resultQuestion = await questionRepository.create(questionToCreate);
       questionId = resultQuestion._id;
@@ -576,9 +629,17 @@ describe('Question API Test', () => {
         queryConstructor,
         url: `${routes.questions.url}/${questionId}/answers`
       });
+      Object.assign(errorValidatiohData, {
+        queryConstructor,
+        headers: {
+          cookie: cookies
+        },
+        url: `${routes.questions.url}/${questionId}/answers`
+      });
     });
 
     errorAuthTest(errorAuthData);
+    errorValidationTest(errorValidatiohData);
 
     it('should update answer', async () => {
       const response = await queryConstructor.sendRequest({

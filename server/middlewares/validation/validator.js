@@ -1,14 +1,16 @@
 'use strict';
 
-const statusCodes = require('../../constants');
+const { validationError } = require('../../constants').STATUS_CODES;
 
 module.exports = (validateFunction) => {
   return (ctx, next) => {
     validateFunction(ctx);
 
     if (ctx.errors) {
-      ctx.status = statusCodes.validationError;
-      ctx.body = ctx.errors;
+      return Promise.reject({
+        validationErrors: ctx.errors,
+        status: validationError
+      });
     }
     return next();
   };
