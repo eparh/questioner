@@ -49,7 +49,7 @@ class QuestionRepository extends BaseRepository {
   }
 
   updateAnswer(questionId, answer) {
-    return this.Model.update({
+    return this.Model.findOneAndUpdate({
       _id: questionId,
       'answers._id': answer._id
     },
@@ -57,11 +57,14 @@ class QuestionRepository extends BaseRepository {
       $set: {
         'answers.$': answer
       }
+    },
+    {
+      new: true
     });
   }
 
   removeAnswer(questionId, answerId) {
-    return this.Model.update({
+    return this.Model.findOneAndUpdate({
       _id: questionId
     },
     {
@@ -70,19 +73,25 @@ class QuestionRepository extends BaseRepository {
           _id: answerId
         }
       }
+    },
+    {
+      new: true
     });
   }
 
   voteUpQuestion(questionId, voterId) {
     const target = `voters.${voterId}`;
 
-    return this.Model.update({
+    return this.Model.findOneAndUpdate({
       _id: questionId
     },
     {
       $set: {
         [target]: 1
       }
+    },
+    {
+      new: true
     }
     );
   }
@@ -90,13 +99,16 @@ class QuestionRepository extends BaseRepository {
   voteDownQuestion(questionId, voterId) {
     const target = `voters.${voterId}`;
 
-    return this.Model.update({
+    return this.Model.findOneAndUpdate({
       _id: questionId
     },
     {
       $set: {
         [target]: -1
       }
+    },
+    {
+      new: true
     }
     );
   }
@@ -104,7 +116,7 @@ class QuestionRepository extends BaseRepository {
   voteUpAnswer(questionId, answerId, voterId) {
     const target = `answers.$.voters.${voterId}`;
 
-    return this.Model.update({
+    return this.Model.findOneAndUpdate({
       _id: questionId,
       'answers._id': answerId
     },
@@ -112,13 +124,16 @@ class QuestionRepository extends BaseRepository {
       $set: {
         [target]: 1
       }
+    },
+    {
+      new: true
     });
   }
 
   voteDownAnswer(questionId, answerId, voterId) {
     const target = `answers.$.voters.${voterId}`;
 
-    return this.Model.update({
+    return this.Model.findOneAndUpdate({
       _id: questionId,
       'answers._id': answerId
     },
@@ -126,6 +141,9 @@ class QuestionRepository extends BaseRepository {
       $set: {
         [target]: -1
       }
+    },
+    {
+      new: true
     });
   }
 }

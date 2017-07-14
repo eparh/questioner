@@ -19,11 +19,8 @@ class TagController {
 
   async update(ctx) {
     const tag = ctx.request.body;
-    const result = await this.tagService.update(tag);
 
-    return result.nModified ? this.tagService.getById(tag._id) : {
-      statusCode: conflict
-    };
+    return this.tagService.update(tag);
   }
 
   async delete(ctx) {

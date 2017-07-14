@@ -4,6 +4,7 @@ const expect = require('chai').expect;
 
 const { mapper } = require('../../../helpers/iocContainer').getAllDependencies();
 const { createStub, createMock, createSpy } = require('../../helpers/utils/fakesHelper');
+const { forbidden } = require('../../../constants/').STATUS_CODES;
 
 const testData = require('./data/question');
 const QuestionService = require('../../../businessLogic/services/question');
@@ -141,7 +142,7 @@ describe('Conference Service', () => {
     it('should not update because of forbiddance', async () => {
       const question = await service.updateQuestion(expectedQuestion, [], testData.stranger);
 
-      return expect(question).to.be.undefined;
+      return expect(question).to.has.property('statusCode', forbidden);
     });
   });
 

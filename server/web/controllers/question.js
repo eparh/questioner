@@ -31,48 +31,33 @@ class QuestionController {
     return this.questionService.createQuestion(question, files, userId);
   }
 
-  async updateQuestion(ctx) {
+  updateQuestion(ctx) {
     const question = ctx.request.body;
     const files = ctx.req.files || [];
     const user = ctx.state.user;
-    const result = await this.questionService.updateQuestion(question, files, user);
 
-    return result ? this.questionService.getById(question._id) : {
-      statusCode: conflict
-    };
+    return this.questionService.updateQuestion(question, files, user);
   }
 
-  async voteUpQuestion(ctx) {
-    const { questionId } = ctx.params;
-    const voterId = ctx.state.user._id;
-    const result = await this.questionService.voteUpQuestion(questionId, voterId);
-
-    return result.nModified ? this.questionService.getById(questionId) : {
-      statusCode: conflict
-    };
-  }
-
-  async voteDownQuestion(ctx) {
+  voteUpQuestion(ctx) {
     const { questionId } = ctx.params;
     const voterId = ctx.state.user._id;
 
-    const result = await this.questionService.voteDownQuestion(questionId, voterId);
-
-    return result.nModified ? this.questionService.getById(questionId) : {
-      statusCode: conflict
-    };
+    return this.questionService.voteUpQuestion(questionId, voterId);
   }
 
-  async deleteQuestion(ctx) {
+  voteDownQuestion(ctx) {
+    const { questionId } = ctx.params;
+    const voterId = ctx.state.user._id;
+
+    return this.questionService.voteDownQuestion(questionId, voterId);
+  }
+
+  deleteQuestion(ctx) {
     const id = ctx.params.id;
     const user = ctx.state.user;
-    const result = await this.questionService.deleteQuestion(id, user);
 
-    if (! result) {
-      return {
-        statusCode: conflict
-      };
-    }
+    return this.questionService.deleteQuestion(id, user);
   }
 
   async createAnswer(ctx) {
@@ -86,45 +71,33 @@ class QuestionController {
     };
   }
 
-  async updateAnswer(ctx) {
+  updateAnswer(ctx) {
     const questionId = ctx.params.questionId;
     const answer = ctx.request.body;
     const user = ctx.state.user;
-    const result = await this.questionService.updateAnswer(questionId, answer, user);
 
-    return result ? this.questionService.getById(questionId) : {
-      statusCode: conflict
-    };
+    return this.questionService.updateAnswer(questionId, answer, user);
   }
 
-  async deleteAnswer(ctx) {
+  deleteAnswer(ctx) {
     const { questionId, answerId } = ctx.params;
     const user = ctx.state.user;
-    const result = await this.questionService.deleteAnswer(questionId, answerId, user);
 
-    return result ? this.questionService.getById(questionId) : {
-      statusCode: conflict
-    };
+    return this.questionService.deleteAnswer(questionId, answerId, user);
   }
 
-  async voteUpAnswer(ctx) {
+  voteUpAnswer(ctx) {
     const { questionId, answerId } = ctx.params;
     const voterId = ctx.state.user._id;
-    const result = await this.questionService.voteUpAnswer(questionId, answerId, voterId);
 
-    return result.nModified ? this.questionService.getById(questionId) : {
-      statusCode: conflict
-    };
+    return this.questionService.voteUpAnswer(questionId, answerId, voterId);
   }
 
-  async voteDownAnswer(ctx) {
+  voteDownAnswer(ctx) {
     const { questionId, answerId } = ctx.params;
     const voterId = ctx.state.user._id;
-    const result = await this.questionService.voteDownAnswer(questionId, answerId, voterId);
 
-    return result.nModified ? this.questionService.getById(questionId) : {
-      statusCode: conflict
-    };
+    return this.questionService.voteDownAnswer(questionId, answerId, voterId);
   }
 }
 

@@ -173,7 +173,7 @@ describe('Tag API Test', () => {
       await queryConstructor.sendRequest({
         method: 'put',
         url: `${routes.tags.url}`,
-        expect: conflict,
+        expect: emptyResponse,
         body: Object.assign({}, tagToCreate, {
           _id: fakeId
         }),

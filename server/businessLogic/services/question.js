@@ -1,5 +1,7 @@
 'use strict';
 
+const { conflict, forbidden, emptyResponse } = require('../../constants/').STATUS_CODES;
+
 class QuestionService {
   constructor({ questionRepository, mapper }) {
     this.questionRepository = questionRepository;
@@ -39,9 +41,15 @@ class QuestionService {
 
     const questionInDB = await questionRepository.findById(questionModel._id);
 
-    if (questionInDB && _hasPermission(user, questionInDB.author)) {
-      return questionRepository.updateById(questionModel);
+    if (! questionInDB) {
+      return {
+        statusCode: conflict
+      };
     }
+
+    return _hasPermission(user, questionInDB.author) ? questionRepository.updateById(questionModel) : {
+      statusCode: forbidden
+    };
   }
 
   voteUpQuestion(questionId, voterId) {
@@ -56,9 +64,22 @@ class QuestionService {
     const { questionRepository, _hasPermission } = this;
     const questionInDB = await questionRepository.findById(id);
 
-    if (questionInDB && _hasPermission(user, questionInDB.author)) {
-      return questionRepository.removeById(id);
+    if (! questionInDB) {
+      return {
+        statusCode: conflict
+      };
     }
+
+    if (_hasPermission(user, questionInDB.author)) {
+      questionRepository.removeById(id);
+      return {
+        statusCode: emptyResponse
+      };
+    }
+
+    return {
+      statusCode: forbidden
+    };
   }
 
   createAnswer(questionId, answer, userId) {
@@ -73,18 +94,30 @@ class QuestionService {
     const { questionRepository, _hasPermission } = this;
     const answerInDB = await questionRepository.getAnswerById(questionId, answer._id);
 
-    if (answerInDB && _hasPermission(user, answerInDB.author)) {
-      return questionRepository.updateAnswer(questionId, answer);
+    if (! answerInDB) {
+      return {
+        statusCode: conflict
+      };
     }
+
+    return _hasPermission(user, answerInDB.author) ? questionRepository.updateAnswer(questionId, answer) : {
+      statusCode: forbidden
+    };
   }
 
   async deleteAnswer(questionId, answerId, user) {
     const { questionRepository, _hasPermission } = this;
     const answerInDB = await questionRepository.getAnswerById(questionId, answerId);
 
-    if (answerInDB && _hasPermission(user, answerInDB.author )) {
-      return this.questionRepository.removeAnswer(questionId, answerId);
+    if (! answerInDB) {
+      return {
+        statusCode: conflict
+      };
     }
+
+    return _hasPermission(user, answerInDB.author) ? questionRepository.removeAnswer(questionId, answerId) : {
+      statusCode: forbidden
+    };
   }
 
   voteDownAnswer(questionId, answerId, voterId) {
