@@ -221,6 +221,10 @@ describe('Question API Test', () => {
       });
 
       checkQuestion(response.body, questionToCreate);
+
+      const result = await questionRepository.getById(response.body._id);
+
+      checkQuestion(result, questionToCreate);
     });
 
     it('should create question with attachments', async () => {
@@ -249,6 +253,10 @@ describe('Question API Test', () => {
       });
 
       checkQuestion(response.body, questionToCreate);
+
+      const result = await questionRepository.getById(response.body._id);
+
+      checkQuestion(result, questionToCreate);
     });
 
     after(() => {

@@ -111,6 +111,10 @@ describe('Tag API Test', () => {
       });
 
       expect(response.body.name).to.equal(tagToCreate.name);
+
+      const result = await tagRepository.getById(response.body._id);
+
+      expect(result.name).to.equal(tagToCreate.name);
     });
 
     after(clean);
@@ -167,6 +171,10 @@ describe('Tag API Test', () => {
       });
 
       expect(response.body.name).to.equal(tagToCreate.name);
+
+      const result = await tagRepository.getById(response.body._id);
+
+      expect(result.name).to.equal(tagToCreate.name);
     });
 
     it('shouldn\'t update because tag doesn\'t exist', async () => {
@@ -225,10 +233,14 @@ describe('Tag API Test', () => {
           cookie: adminCookies
         }
       });
+
+      const result = await tagRepository.getById(tagToCreate._id);
+
+      return expect(result).to.be.null;
     });
 
-    it('shouldn\'t delete because tag doesn\'t exist', async () => {
-      await queryConstructor.sendRequest({
+    it('shouldn\'t delete because tag doesn\'t exist', () => {
+      queryConstructor.sendRequest({
         method: 'delete',
         url: `${routes.tags.url}/${fakeId}`,
         expect: conflict,
